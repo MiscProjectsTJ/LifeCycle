@@ -94,6 +94,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     textAlign: "center",
     justifyContent: "center",
-    
+    color: "#19C5E0"
   },
 });
