@@ -1,12 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, TextPropTypes, View } from 'react-native';
+import {Link} from '@react-navigation/native'
+import { Dimensions, StyleSheet, Text, TextPropTypes, View } from 'react-native';
 import map from './map1.png';
 import { Image, ImageBackground } from 'react-native';
 import button from './Ellipse29.png';
 import nametag from './nametag.png';
 import log from './log.png';
 import recycle from './recycle.png';
+import 'react-native-gesture-handler';
+
+const {height, width} = Dimensions.get("window");
 
 function Navbar(props){
   return (
@@ -26,6 +30,7 @@ function NavItem(props){
   return(
     <View style={style}>
         <Iconoclast imgUri={props.image} width={props.width} height={props.height}/>
+        <Link to=""/>
         <Label label={props.label}/>
     </View>
   );
@@ -55,24 +60,23 @@ function Label(props){
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on pp!</Text>
-      <StatusBar style="auto" />
+    
       <Navbar/>
     </View>
+
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#36425C',
     alignItems: 'center',
     justifyContent: 'center',
   },
   rectangle: {
-    width: 363,
-    height: 70,
-    top: 292,
+    width: width,
+    height: 0.1 * height,
+    marginTop:  0.986* height,
     backgroundColor: "#8AC755",
     flexDirection: "row",
     justifyContent: "space-evenly"
