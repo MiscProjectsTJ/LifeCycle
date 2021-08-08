@@ -30,7 +30,6 @@ function NavItem(props){
   return(
     <View style={style}>
         <Iconoclast imgUri={props.image} width={props.width} height={props.height}/>
-        <Link to=""/>
         <Label label={props.label}/>
     </View>
   );
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
   rectangle: {
     width: width,
     height: 0.1 * height,
-    marginTop:  0.986* height,
+    marginTop:  0.9* height,
     backgroundColor: "#8AC755",
     flexDirection: "row",
     justifyContent: "space-evenly"
