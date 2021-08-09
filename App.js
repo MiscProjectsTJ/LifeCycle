@@ -122,8 +122,18 @@ function Label(props) {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HOME">
-        <Stack.Screen style={styles.container} name="HOME" component={HomeScreen} />
+      <Stack.Navigator initialRouteName="HOME"        
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#36425C',
+          },
+          headerTintColor: '#BED751',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          }
+        }}
+      >
+        <Stack.Screen style={styles.container} name="HOME" component={HomeScreen}/>
         <Stack.Screen style={styles.container} name="CLASSIFY" component={ClassifyScreen} />
         <Stack.Screen style={styles.container} name="LOG" component={LogScreen} />
         <Stack.Screen style={styles.container} name="MAP" component={MapScreen} />
