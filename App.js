@@ -1,7 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import {Link} from '@react-navigation/native'
-import { Dimensions, StyleSheet, Text, TextPropTypes, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import map from './map1.png';
 import { Image, ImageBackground } from 'react-native';
 import button from './Ellipse29.png';
@@ -9,6 +7,9 @@ import nametag from './nametag.png';
 import log from './log.png';
 import recycle from './recycle.png';
 import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ClassifyPane from './ClassifyPane.js';
 
 const {height, width} = Dimensions.get("window");
 
@@ -56,13 +57,17 @@ function Label(props){
     </ImageBackground>
   );
 }
-export default function App() {
+const Stack = createNativeStackNavigator();
+const App = () => {
   return (
-    <View style={styles.container}>
-    
-      <Navbar/>
-    </View>
-
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Classify" component={ClassifyPane}/>
+      </Stack.Navigator>
+      <View style={styles.container}>
+        <Navbar/>
+      </View>
+    </NavigationContainer>
   );
 }
 
@@ -100,3 +105,4 @@ const styles = StyleSheet.create({
     color: "#19C5E0"
   },
 });
+export default App;
