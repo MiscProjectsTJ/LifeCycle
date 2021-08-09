@@ -19,10 +19,12 @@ const labels = ['MAP', 'LOG', 'CLASSIFY']
 
 function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Home</Text>
-      <Text>Turtles Saved</Text>
-      <View style={styles.home_log} />
+    <View>
+      <View>
+        <Text>Home</Text>
+        <Text>Turtles Saved</Text>
+        <View style={styles.home_log} />
+      </View>
       <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
@@ -30,8 +32,10 @@ function HomeScreen() {
 
 function MapScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Map</Text>
+    <View>
+      <View>
+        <Text>Map</Text>
+      </View>
       <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
@@ -39,7 +43,7 @@ function MapScreen() {
 
 function ClassifyScreen() {
   return (
-    <View style={styles.container}>
+    <View>
       <Text>Classify</Text>
       <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
@@ -48,7 +52,7 @@ function ClassifyScreen() {
 
 function LogScreen() {
   return (
-    <View style={styles.container}>
+    <View>
       <Text>Log</Text>
       <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
@@ -119,10 +123,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="HOME">
-        <Stack.Screen name="HOME" component={HomeScreen} />
-        <Stack.Screen name="CLASSIFY" component={ClassifyScreen} />
-        <Stack.Screen name="LOG" component={LogScreen} />
-        <Stack.Screen name="MAP" component={MapScreen} />
+        <Stack.Screen style={styles.container} name="HOME" component={HomeScreen} />
+        <Stack.Screen style={styles.container} name="CLASSIFY" component={ClassifyScreen} />
+        <Stack.Screen style={styles.container} name="LOG" component={LogScreen} />
+        <Stack.Screen style={styles.container} name="MAP" component={MapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -137,7 +141,8 @@ const styles = StyleSheet.create({
   rectangle: {
     width: width,
     height: 0.1 * height,
-    marginTop: 0.986 * height,
+    marginTop: 0.822 * height,
+    position: 'absolute',
     backgroundColor: "#8AC755",
     flexDirection: "row",
     justifyContent: "space-evenly"
