@@ -3,10 +3,10 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native'
 import { Dimensions, StyleSheet, Text,TouchableOpacity, View } from 'react-native';
-import map from './map1.png';
 import { Image, ImageBackground } from 'react-native';
 import button from './Ellipse29.png';
 import nametag from './nametag.png';
+import map from './map1.png';
 import log from './log.png';
 import recycle from './recycle.png';
 import 'react-native-gesture-handler';
@@ -14,6 +14,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
 const { height, width } = Dimensions.get("window");
+const images = [map, log, recycle]
+const labels = ['MAP', 'LOG', 'CLASSIFY']
 
 function HomeScreen() {
   return (
@@ -21,7 +23,7 @@ function HomeScreen() {
       <Text>Home</Text>
       <Text>Turtles Saved</Text>
       <View style={styles.home_log} />
-      <Navbar />
+      <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
 }
@@ -30,7 +32,7 @@ function MapScreen() {
   return (
     <View style={styles.container}>
       <Text>Map</Text>
-      <Navbar />
+      <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
 }
@@ -39,7 +41,7 @@ function ClassifyScreen() {
   return (
     <View style={styles.container}>
       <Text>Classify</Text>
-      <Navbar />
+      <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
 }
@@ -48,19 +50,22 @@ function LogScreen() {
   return (
     <View style={styles.container}>
       <Text>Log</Text>
-      <Navbar />
+      <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
 }
 
 const Stack = createNativeStackNavigator();
 
-function Navbar() {
+const Navbar = props => {
+
+  const listItems = props.images.map((image, index) =>
+      <NavItem image={image} width={42} height={49} label={props.labels[index]} key={index}/>
+  );
+
   return (
     <View style={styles.rectangle}>
-      <NavItem image={map} width={42} height={49} label="MAP" />
-      <NavItem image={recycle} width={52.78} height={52.27} label="CLASSIFY" />
-      <NavItem image={log} width={70} height={70} label="LOG" />
+      {listItems}
     </View>
 
   );
@@ -71,19 +76,21 @@ function NavItem(props) {
     textAlign: "center",
     alignItems: "center",
   };
+  
+  const navigation = useNavigation();
   return (
-    <View style={style}>
-      <Iconoclast imgUri={props.image} width={props.width} height={props.height} label={props.label}/>
-      {/* <Link to=""/> */}
-      <Label label={props.label} />
-    </View>
+    <TouchableOpacity onPress={() => navigation.navigate(props.label)}>
+      <View style={style}>
+        <Iconoclast imgUri={props.image} width={props.width} height={props.height} label={props.label}/>
+        {/* <Link to=""/> */}
+        <Label label={props.label} />
+      </View>
+    </TouchableOpacity>
   );
 }
 function Iconoclast(props)  {
-  const navigation = useNavigation();
-
   return (
-    <TouchableOpacity onPress={() => navigation.navigate(props.label)}>
+    <View>
       <ImageBackground source={button} style={styles.navlog}>
         <Image source={props.imgUri} style={{
           width: props.width,
@@ -92,7 +99,7 @@ function Iconoclast(props)  {
         }}>
         </Image>
       </ImageBackground>
-    </TouchableOpacity>
+    </View>
   );
 }
 function Label(props) {
