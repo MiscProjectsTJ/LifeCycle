@@ -2,7 +2,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native'
-import { Dimensions, StyleSheet, Text,TouchableOpacity, View } from 'react-native';
+import { Dimensions, StyleSheet, Text,TouchableOpacity, View, ScrollView } from 'react-native';
 import { Image, ImageBackground } from 'react-native';
 import button from './Ellipse29.png';
 import nametag from './nametag.png';
@@ -12,6 +12,7 @@ import recycle from './recycle.png';
 import 'react-native-gesture-handler';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import mapInfo from './map.json';
 
 const { height, width } = Dimensions.get("window");
 const images = [map, log, recycle]
@@ -31,11 +32,21 @@ function HomeScreen() {
 }
 
 function MapScreen() {
-  return (
-    <View>
-      <View>
-        <Text>Map</Text>
+
+  var mapOptions = []
+  for(let x in mapInfo) {
+    mapOptions.push(
+      <View key={x} style={[styles.rectangleMap, styles.elevation]}>
+        <Text>{mapInfo[x]["Type"]}</Text>
       </View>
+    )
+  }
+  return (
+    <View style={{backgroundColor: "#36425C"}}>
+      <ScrollView>  
+          {mapOptions}
+      </ScrollView>
+
       <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
@@ -156,6 +167,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#8AC755",
     flexDirection: "row",
     justifyContent: "space-evenly"
+  },
+  scrollMap: {
+  },
+  rectangleMap: {
+    width: 0.9 * width,
+    height: 0.15 * height,
+    borderRadius: 15,
+    marginTop: 0.04 * height,
+    backgroundColor: '#8AC755',
+    marginLeft: 0.5 * 0.1 * width
+  },
+  textMap: {
+
+  },
+  elevation: {
+    elevation: 5,
+    shadowColor: '#000000',
   },
   badge: {
     textAlign: "center",

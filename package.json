@@ -12,18 +12,21 @@
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.0.3",
     "expo": "^42.0.1",
+    "expo-camera": "~11.2.2",
     "expo-status-bar": "~1.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-camera": "^4.0.1",
+    "react-native-drop-shadow": "^0.0.2",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-reanimated": "~2.2.0",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
+    "react-native-shadow-2": "^3.0.0",
+    "react-native-svg": "12.1.1",
     "react-native-web": "^0.17.1",
-    "react-navigation": "^4.4.4",
-    "expo-camera": "~11.2.2"
+    "react-navigation": "^4.4.4"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
