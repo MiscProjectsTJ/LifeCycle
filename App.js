@@ -13,6 +13,8 @@ import 'react-native-gesture-handler';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import mapInfo from './map.json';
+import plasticImage from './plastic.png';
+import arrow from './7arrow.png';
 
 const { height, width } = Dimensions.get("window");
 const images = [map, log, recycle]
@@ -31,14 +33,20 @@ function HomeScreen() {
   );
 }
 
-function MapScreen() {
+function MapScreenSelection() {
 
   var mapOptions = []
+  const navigation = useNavigation();
   for(let x in mapInfo) {
     mapOptions.push(
-      <View key={x} style={[styles.rectangleMap, styles.elevation]}>
-        <Text>{mapInfo[x]["Type"]}</Text>
+      <View key={x} style={[styles.rectangleMap, styles.elevation, styles.layoutMap]}>
+        <Image style={styles.imageMap} source={plasticImage}/>
+        <Text style={ {fontSize:30} }>{mapInfo[x]["Type"]}</Text>
+        <TouchableOpacity key={x} onPress={() => navigation.navigate('Map Screen', {index: x})}>
+          <Image style={styles.imageMap2} source={arrow}/>      
+        </TouchableOpacity>
       </View>
+
     )
   }
   return (
@@ -48,6 +56,23 @@ function MapScreen() {
       </ScrollView>
 
       <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+    </View>
+  );
+}
+
+function MapScreen({ navigation, route }) {
+
+  // var mapOptions = []
+  // const navigation = useNavigation();
+  // for(let x in mapInfo) {
+  //   mapOptions.push(
+  //     <Text>Test {}</Text>
+
+  //   )
+  // }
+  return (
+    <View>
+      <Text>Test {route.params.index}</Text>
     </View>
   );
 }
@@ -147,7 +172,8 @@ export default function App() {
         <Stack.Screen style={styles.container} name="HOME" component={HomeScreen}/>
         <Stack.Screen style={styles.container} name="CLASSIFY" component={ClassifyScreen} />
         <Stack.Screen style={styles.container} name="LOG" component={LogScreen} />
-        <Stack.Screen style={styles.container} name="MAP" component={MapScreen} />
+        <Stack.Screen style={styles.container} name="MAP" component={MapScreenSelection} />
+        <Stack.Screen style={styles.container} name="Map Screen" component={MapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -170,6 +196,11 @@ const styles = StyleSheet.create({
   },
   scrollMap: {
   },
+  layoutMap: {
+    flexDirection:'row',
+    justifyContent:'space-around',
+    alignItems:'center',
+  },
   rectangleMap: {
     width: 0.9 * width,
     height: 0.15 * height,
@@ -177,6 +208,15 @@ const styles = StyleSheet.create({
     marginTop: 0.04 * height,
     backgroundColor: '#8AC755',
     marginLeft: 0.5 * 0.1 * width
+  },
+  imageMap: {
+    width: 0.27 * width,
+    height: 0.15 * height,
+    marginLeft: -30
+  },  
+  imageMap2: {
+    width: 0.1 * width,
+    height: 0.05 * height,
   },
   textMap: {
 
