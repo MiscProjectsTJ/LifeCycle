@@ -2,7 +2,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native'
-import { Dimensions, StyleSheet, Text,TouchableOpacity, View, ScrollView } from 'react-native';
+import { Dimensions, StyleSheet, Text,TouchableOpacity, View, ScrollView, PermissionsAndroid } from 'react-native';
 import { Image, ImageBackground } from 'react-native';
 import button from './Ellipse29.png';
 import nametag from './nametag.png';
@@ -15,6 +15,21 @@ import { useNavigation } from '@react-navigation/native';
 import mapInfo from './map.json';
 import plasticImage from './plastic.png';
 import arrow from './7arrow.png';
+import MapboxGL from '@react-native-mapbox-gl/maps';
+import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
+
+LocationServicesDialogBox.checkLocationServicesIsEnabled({
+  message: "Use Location ?",
+  ok: "YES",
+  cancel: "NO"
+}).then(function(success) {
+  console.log(success); // success => "enabled"
+}).catch((error) => {
+  console.log(error.message); // error.message => "disabled"
+});
+
+MapboxGL.setAccessToken("pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A");
+MapboxGL.setConnected(true);
 
 const { height, width } = Dimensions.get("window");
 const images = [map, log, recycle]
@@ -62,17 +77,31 @@ function MapScreenSelection() {
 
 function MapScreen({ navigation, route }) {
 
-  // var mapOptions = []
-  // const navigation = useNavigation();
-  // for(let x in mapInfo) {
-  //   mapOptions.push(
-  //     <Text>Test {}</Text>
+  var text = []
+  // fetch("https://api.mapbox.com/geocoding/v5/mapbox.places/grocery.json?proximity=-77.17151097873781,38.81164936644131&access_token=pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A")
+  //   .then(response => response.json())
+  //   .then(response => {
+  //     text.push(<View><Text>{response}</Text></View>)
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   });
 
-  //   )
-  // }
+ 
+  
   return (
     <View>
-      <Text>Test {route.params.index}</Text>
+      <MapboxGL.MapView style={{width: width}, {height: 0.5*height}}>
+        {/* <MapboxGL.UserLocation/> */}
+        <MapboxGL.UserLocation visible={true} />
+        <MapboxGL.Camera
+          zoomLevel={3}
+          followUserMode={'normal'}
+          followUserLocation
+        />
+      </MapboxGL.MapView>
+      {/* <Text>Test {route.params.index}</Text> */}
+      {text}
     </View>
   );
 }
