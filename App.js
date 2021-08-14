@@ -2,7 +2,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native'
-import { Dimensions, StyleSheet, Text,TouchableOpacity, View } from 'react-native';
+import { Dimensions, StyleSheet, Text,TouchableOpacity, View, ScrollView, PermissionsAndroid } from 'react-native';
 import { Image, ImageBackground } from 'react-native';
 import button from './Ellipse29.png';
 import nametag from './nametag.png';
@@ -12,6 +12,24 @@ import recycle from './recycle.png';
 import 'react-native-gesture-handler';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import mapInfo from './map.json';
+import plasticImage from './plastic.png';
+import arrow from './7arrow.png';
+import MapboxGL from '@react-native-mapbox-gl/maps';
+import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
+
+LocationServicesDialogBox.checkLocationServicesIsEnabled({
+  message: "Use Location ?",
+  ok: "YES",
+  cancel: "NO"
+}).then(function(success) {
+  console.log(success); // success => "enabled"
+}).catch((error) => {
+  console.log(error.message); // error.message => "disabled"
+});
+
+MapboxGL.setAccessToken("pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A");
+MapboxGL.setConnected(true);
 
 const { height, width } = Dimensions.get("window");
 const images = [map, log, recycle]
@@ -30,13 +48,60 @@ function HomeScreen() {
   );
 }
 
-function MapScreen() {
+function MapScreenSelection() {
+
+  var mapOptions = []
+  const navigation = useNavigation();
+  for(let x in mapInfo) {
+    mapOptions.push(
+      <View key={x} style={[styles.rectangleMap, styles.elevation, styles.layoutMap]}>
+        <Image style={styles.imageMap} source={plasticImage}/>
+        <Text style={ {fontSize:30} }>{mapInfo[x]["Type"]}</Text>
+        <TouchableOpacity key={x} onPress={() => navigation.navigate('Map Screen', {index: x})}>
+          <Image style={styles.imageMap2} source={arrow}/>      
+        </TouchableOpacity>
+      </View>
+
+    )
+  }
+  return (
+    <View style={{backgroundColor: "#36425C"}}>
+      <ScrollView>  
+          {mapOptions}
+      </ScrollView>
+
+      <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+    </View>
+  );
+}
+
+function MapScreen({ navigation, route }) {
+
+  var text = []
+  // fetch("https://api.mapbox.com/geocoding/v5/mapbox.places/grocery.json?proximity=-77.17151097873781,38.81164936644131&access_token=pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A")
+  //   .then(response => response.json())
+  //   .then(response => {
+  //     text.push(<View><Text>{response}</Text></View>)
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   });
+
+ 
+  
   return (
     <View>
-      <View>
-        <Text>Map</Text>
-      </View>
-      <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+      <MapboxGL.MapView style={{width: width}, {height: 0.5*height}}>
+        {/* <MapboxGL.UserLocation/> */}
+        <MapboxGL.UserLocation visible={true} />
+        <MapboxGL.Camera
+          zoomLevel={3}
+          followUserMode={'normal'}
+          followUserLocation
+        />
+      </MapboxGL.MapView>
+      {/* <Text>Test {route.params.index}</Text> */}
+      {text}
     </View>
   );
 }
@@ -136,7 +201,8 @@ export default function App() {
         <Stack.Screen style={styles.container} name="HOME" component={HomeScreen}/>
         <Stack.Screen style={styles.container} name="CLASSIFY" component={ClassifyScreen} />
         <Stack.Screen style={styles.container} name="LOG" component={LogScreen} />
-        <Stack.Screen style={styles.container} name="MAP" component={MapScreen} />
+        <Stack.Screen style={styles.container} name="MAP" component={MapScreenSelection} />
+        <Stack.Screen style={styles.container} name="Map Screen" component={MapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -156,6 +222,37 @@ const styles = StyleSheet.create({
     backgroundColor: "#8AC755",
     flexDirection: "row",
     justifyContent: "space-evenly"
+  },
+  scrollMap: {
+  },
+  layoutMap: {
+    flexDirection:'row',
+    justifyContent:'space-around',
+    alignItems:'center',
+  },
+  rectangleMap: {
+    width: 0.9 * width,
+    height: 0.15 * height,
+    borderRadius: 15,
+    marginTop: 0.04 * height,
+    backgroundColor: '#8AC755',
+    marginLeft: 0.5 * 0.1 * width
+  },
+  imageMap: {
+    width: 0.27 * width,
+    height: 0.15 * height,
+    marginLeft: -30
+  },  
+  imageMap2: {
+    width: 0.1 * width,
+    height: 0.05 * height,
+  },
+  textMap: {
+
+  },
+  elevation: {
+    elevation: 5,
+    shadowColor: '#000000',
   },
   badge: {
     textAlign: "center",
