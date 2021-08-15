@@ -12,6 +12,7 @@ import recycle from './recycle.png';
 import 'react-native-gesture-handler';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import ClassifyPane from './ClassifyPane.js';
 
 const { height, width } = Dimensions.get("window");
 const images = [map, log, recycle]
@@ -20,9 +21,6 @@ const labels = ['MAP', 'LOG', 'CLASSIFY']
 function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
-      <Text>Turtles Saved</Text>
-      <View style={styles.home_log} />
       <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
@@ -37,14 +35,14 @@ function MapScreen() {
   );
 }
 
-function ClassifyScreen() {
-  return (
-    <View style={styles.container}>
-      <Text>Classify</Text>
-      <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
-    </View>
-  );
-}
+// function ClassifyScreen() {
+//   return (
+//     <View style={styles.container}>
+//       <Text>Classify</Text>
+//       <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+//     </View>
+//   );
+// }
 
 function LogScreen() {
   return (
@@ -82,7 +80,6 @@ function NavItem(props) {
     <TouchableOpacity onPress={() => navigation.navigate(props.label)}>
       <View style={style}>
         <Iconoclast imgUri={props.image} width={props.width} height={props.height} label={props.label}/>
-        {/* <Link to=""/> */}
         <Label label={props.label} />
       </View>
     </TouchableOpacity>
@@ -120,7 +117,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="HOME">
         <Stack.Screen name="HOME" component={HomeScreen} />
-        <Stack.Screen name="CLASSIFY" component={ClassifyScreen} />
+        <Stack.Screen name="CLASSIFY" component={ClassifyPane} />
         <Stack.Screen name="LOG" component={LogScreen} />
         <Stack.Screen name="MAP" component={MapScreen} />
       </Stack.Navigator>
@@ -132,12 +129,15 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#36425C',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+    flex:1,
+  },
+  text:{
+
   },
   rectangle: {
     width: width,
-    height: 0.1 * height,
-    marginTop: 0.986 * height,
+    height: 0.11 * height,
     backgroundColor: "#8AC755",
     flexDirection: "row",
     justifyContent: "space-evenly"
