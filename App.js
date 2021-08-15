@@ -1,17 +1,19 @@
 // import HomeScreen from './Home'
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { NavigationContainer } from '@react-navigation/native'
 import { Dimensions, StyleSheet, Text,TouchableOpacity, View } from 'react-native';
 import { Image, ImageBackground } from 'react-native';
+
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+
 import button from './Ellipse29.png';
 import nametag from './nametag.png';
 import map from './map1.png';
 import log from './log.png';
 import recycle from './recycle.png';
 import 'react-native-gesture-handler';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
 
 const { height, width } = Dimensions.get("window");
 const images = [map, log, recycle]
@@ -58,7 +60,6 @@ function LogScreen() {
 const Stack = createNativeStackNavigator();
 
 const Navbar = props => {
-
   const listItems = props.images.map((image, index) =>
       <NavItem image={image} width={42} height={49} label={props.labels[index]} key={index}/>
   );
