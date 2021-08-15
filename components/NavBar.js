@@ -10,8 +10,8 @@ function NavItem(props) {
     
     const navigation = useNavigation();
     return (
-      <TouchableOpacity onPress={() => navigation.navigate(props.label)}>
-        <View style={style}>
+      <TouchableOpacity >
+        <View onPress={() => navigation.navigate(props.label)} style={style}>
           <Iconoclast imgUri={props.image} width={props.width} height={props.height} label={props.label}/>
           {/* <Link to=""/> */}
           <Label label={props.label} />
