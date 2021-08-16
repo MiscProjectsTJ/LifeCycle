@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Camera, takePictureAsync} from 'expo-camera';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { Camera} from 'expo-camera';
+
 const ClassifyPane = () => {
   const [hasPermission, setHasPermission] = useState(null);
+  const[cameraRef, setCameraRef] = useState(null);
+  const[img, setImg] = useState(null);
+  const[imgUri, setImgUri] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
 
   useEffect(() => {
@@ -20,20 +24,38 @@ const ClassifyPane = () => {
   }
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} ref={ref => {this.camera=ref}}>
+      <Camera style={styles.camera} ref={ref => {setCameraRef(ref);}}/>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
             onPress={async () => {
-              if(this.camera){
-                let photo = await this.camera.takePictureAsync(base64=true);
-                photo.then((val)=> console.log(val));
+              "use strict";
+              if(cameraRef){
+                let photo = await cameraRef.takePictureAsync({base64: true});
+                setImg(photo);
+                // return <Image source={img.uri}/>;
+                // console.log(JSON.stringify(img.base64));
+                fetch("http://192.168.0.112:5000/add", {
+                  method: "POST",
+                  headers: {
+                    Accept: "*/*",
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({val: img.uri}),
+                })
+                .then(response => response.json())
+                .then(data => {
+                  setImgUri(data.result);
+                  console.log('Success:', data);
+                })
+                .catch((error) => {
+                  console.error('Error:', error);
+                });
               }
             }}>
             <Text style={styles.text}> Flip </Text>
           </TouchableOpacity>
         </View>
-      </Camera>
     </View>
   );
 }
