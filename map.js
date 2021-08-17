@@ -5,28 +5,28 @@ export const mapInfo = [
         "Image": require("./plastic.png")
     },
         {
-        "Type": "Plastic",
-        "Keywords": ["grocery", "recycle"],
+        "Type": "Paper",
+        "Keywords": ["recycling"],
         "Image": require("./plastic.png")
     },
         {
-        "Type": "Plastic",
-        "Keywords": ["grocery", "recycle"],
+        "Type": "Cardboard",
+        "Keywords": ["recycling"],
         "Image": require("./plastic.png")
     },
         {
-        "Type": "Plastic",
-        "Keywords": ["grocery", "recycle"],
+        "Type": "Metal",
+        "Keywords": ["metal", "recycling"],
         "Image": require("./plastic.png")
     },
         {
-        "Type": "Plastic",
-        "Keywords": ["grocery", "recycle"],
+        "Type": "Glass",
+        "Keywords": ["recycling"],
         "Image": require("./plastic.png")
     },
         {
-        "Type": "Plastic",
-        "Keywords": ["grocery", "recycle"],
+        "Type": "Tires",
+        "Keywords": ["tire", "recycling"],
         "Image": require("./plastic.png")
     },
         {

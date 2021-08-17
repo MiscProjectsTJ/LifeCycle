@@ -170,7 +170,7 @@ function MapScreen({ navigation, route }) {
               });
           }
     
-    }, 3000)
+    }, 5000)
   }, [update])
   
 
