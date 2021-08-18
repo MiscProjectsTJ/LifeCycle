@@ -30,6 +30,11 @@ export const mapInfo = [
         "Image": require("./plastic.png")
     },
         {
+        "Type": "Medicine",
+        "Keywords": ["pharmacy"],
+        "Image": require("./plastic.png")
+    },
+        {
         "Type": "Plastic",
         "Keywords": ["grocery", "recycle"],
         "Image": require("./plastic.png")

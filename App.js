@@ -3,8 +3,9 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component, useState, useEffect } from 'react';
 import { Icon } from 'react-native-elements'
 import { NavigationContainer } from '@react-navigation/native'
-import { Dimensions, StyleSheet, Text,TouchableOpacity, View, ScrollView, PermissionsAndroid } from 'react-native';
+import { Dimensions, StyleSheet, Text,TouchableOpacity, View, ScrollView, ToastAndroid, PermissionsAndroid } from 'react-native';
 import { Image, ImageBackground } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
@@ -15,6 +16,7 @@ import map from './map1.png';
 import log from './log.png';
 import recycle from './recycle.png';
 import 'react-native-gesture-handler';
+import loadGif from './loading-buffering.gif';
 
 import {mapInfo} from './map.js';
 import arrow from './7arrow.png';
@@ -81,11 +83,12 @@ function MapScreenSelection() {
 function MapScreen({ navigation, route }) {
   var text2 = []
   text2.push(
-    <Text>Loading...</Text>
+    <Text></Text>
   )
   const update = true
   const [text, setText] = useState(text2);
   const [mapText, setMapText] = useState(
+    <View>
     <MapboxGL.MapView style={{width: width}, {height: 0.4*height}}>
       <MapboxGL.UserLocation visible={true} />
       <MapboxGL.Camera
@@ -94,81 +97,94 @@ function MapScreen({ navigation, route }) {
         followUserLocation
       />
     </MapboxGL.MapView>
+    <Image 
+      source={loadGif}  
+      style={{width: "50%", height: "50%", position: "absolute", top: "90%", left: "25%"}}
+    ></Image>
+    </View>
   );
+
+  function copyToClipboard(args){
+    Clipboard.setString(args)
+    ToastAndroid.show('The address has been copied succesfully!', ToastAndroid.SHORT);
+  }
+
   useEffect(() => { 
     setTimeout(() =>  {
       var lat = MapboxGL.locationManager["_lastKnownLocation"]["coords"]["latitude"]
-        var long = MapboxGL.locationManager["_lastKnownLocation"]["coords"]["longitude"]
-        var listAddress = []
-        var listLong = []
-        var listLat = []
-        var results = []
-        var mapResults = []
+      var long = MapboxGL.locationManager["_lastKnownLocation"]["coords"]["longitude"]
+      var listAddress = []
+      var listLong = []
+      var listLat = []
+      var results = []
+      var mapResults = []
 
-          
-          results.push(<Text>Press to copy to clipboard.</Text>)
-          let tempKeys = mapInfo[route.params.index]["Keywords"]
-          for(let query in tempKeys) {
-            fetch("https://api.mapbox.com/geocoding/v5/mapbox.places/"+tempKeys[query]+".json?country=US&proximity="+long+","+lat+"&limit=3&access_token=pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A")
-              .then(response => response.json())
-              .then(response => {
-                for(let i = 0; i<response["features"].length; i++) {
-                  let temp =  response["features"][i]
-                  listAddress.push(temp["place_name"])
-                  listLong.push(temp.geometry.coordinates[0])
-                  listLat.push(temp.geometry.coordinates[1])
-                }  
-                if((3*tempKeys.length) === listAddress.length) {
-                  if(listAddress.length === 0) {
-                    setText(<Text>Map API is offline. Sorry for the inconvenience.</Text>)
-                  } else {
-                    console.log(listAddress)
-                    console.log(listLong)
-                    console.log(listLat)
-                    for(let x in listAddress){
-                      results.push(
+        
+        results.push(<Text>Press to copy to clipboard.</Text>)
+        let tempKeys = mapInfo[route.params.index]["Keywords"]
+        for(let query in tempKeys) {
+          fetch("https://api.mapbox.com/geocoding/v5/mapbox.places/"+tempKeys[query]+".json?country=US&proximity="+long+","+lat+"&limit=3&access_token=pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A")
+            .then(response => response.json())
+            .then(response => {
+              for(let i = 0; i<response["features"].length; i++) {
+                let temp =  response["features"][i]
+                listAddress.push(temp["place_name"])
+                listLong.push(temp.geometry.coordinates[0])
+                listLat.push(temp.geometry.coordinates[1])
+              }  
+              if((3*tempKeys.length) === listAddress.length) {
+                if(listAddress.length === 0) {
+                  setText(<Text>Map API is offline. Sorry for the inconvenience.</Text>)
+                } else {
+                  console.log(listAddress)
+                  console.log(listLong)
+                  console.log(listLat)
+                  for(let x in listAddress){
+                    results.push(
+                      <TouchableOpacity onPress={() => copyToClipboard(listAddress[x])}>
                         <View key={x} style={[styles.rectangleMap, styles.elevation, styles.layoutMap]}>
                           <Text style={ {fontSize:15} }>{x}  {listAddress[x]}</Text>
                         </View>
-                      )
-                      mapResults.push(
-                        <MapboxGL.PointAnnotation
-                          key={x}
-                          id={x}
-                          coordinate={[listLong[x],listLat[x]]}>
-                          <View style={{
-                                    height: 30, 
-                                    width: 30, 
-                                    backgroundColor: '#00cccc', 
-                                    borderRadius: 50, 
-                                    borderColor: '#fff', 
-                                    borderWidth: 3
-                                  }} />
-                          <MapboxGL.Callout 
-                            title={"Point " + x}
-                          />
-                        </MapboxGL.PointAnnotation>
-                      )
-                    }
-                    setText(results)
-                    setMapText(
-                      <MapboxGL.MapView style={{width: width}, {height: 0.4*height}}>
-                        <MapboxGL.UserLocation visible={true} />
-                        <MapboxGL.Camera
-                          zoomLevel={6}
-                          followUserMode={'normal'}
-                          followUserLocation
+                      </TouchableOpacity>
+                    )
+                    mapResults.push(
+                      <MapboxGL.PointAnnotation
+                        key={x}
+                        id={x}
+                        coordinate={[listLong[x],listLat[x]]}>
+                        <View style={{
+                                  height: 30, 
+                                  width: 30, 
+                                  backgroundColor: '#00cccc', 
+                                  borderRadius: 50, 
+                                  borderColor: '#fff', 
+                                  borderWidth: 3
+                                }} />
+                        <MapboxGL.Callout 
+                          title={"Point " + x}
                         />
-                        {mapResults}
-                      </MapboxGL.MapView>
+                      </MapboxGL.PointAnnotation>
                     )
                   }
+                  setText(results)
+                  setMapText(
+                    <MapboxGL.MapView style={{width: width}, {height: 0.4*height}}>
+                      <MapboxGL.UserLocation visible={true} />
+                      <MapboxGL.Camera
+                        zoomLevel={6}
+                        followUserMode={'normal'}
+                        followUserLocation
+                      />
+                      {mapResults}
+                    </MapboxGL.MapView>
+                  )
                 }
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          }
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
     
     }, 5000)
   }, [update])
