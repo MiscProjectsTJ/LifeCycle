@@ -16,7 +16,7 @@ import map from './map1.png';
 import log from './log.png';
 import recycle from './recycle.png';
 import 'react-native-gesture-handler';
-import loadGif from './loading-buffering.gif';
+import loadGif from './gifs/R.gif';
 
 import {mapInfo} from './map.js';
 import arrow from './7arrow.png';
@@ -99,7 +99,7 @@ function MapScreen({ navigation, route }) {
     </MapboxGL.MapView>
     <Image 
       source={loadGif}  
-      style={{width: "50%", height: "50%", position: "absolute", top: "90%", left: "25%"}}
+      style={{width: "50%", height: "70%", position: "absolute", top: "90%", left: "25%"}}
     ></Image>
     </View>
   );
