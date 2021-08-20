@@ -1,25 +1,29 @@
-// import HomeScreen from './Home'
+// REACT/REACT NATIVE COMPONENT IMPORTS
 import { StatusBar } from 'expo-status-bar';
 import React, { Component, useState, useEffect } from 'react';
-import { Icon } from 'react-native-elements'
-import { NavigationContainer } from '@react-navigation/native'
+import { Icon } from 'react-native-elements';
+import { NavigationContainer } from '@react-navigation/native';
 import { Dimensions, StyleSheet, Text,TouchableOpacity, View, ScrollView, PermissionsAndroid } from 'react-native';
 import { Image, ImageBackground } from 'react-native';
 
+// REACT NAVIGATION IMPORTS
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
-import button from './Ellipse29.png';
-import nametag from './nametag.png';
-import map from './map1.png';
-import log from './log.png';
-import recycle from './recycle.png';
+// IMAGE IMPORTS
+import button from './icons/Ellipse29.png';
+import nametag from './icons/nametag.png';
+import map from './icons/map1.png';
+import log from './icons/log.png';
+import recycle from './icons/recycle.png';
+import arrow from './icons/7arrow.png';
 import 'react-native-gesture-handler';
 
+// MAP IMPORTS
 import {mapInfo} from './map.js';
-import arrow from './7arrow.png';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
+import NavBar from './components/NavBar';
 
 LocationServicesDialogBox.checkLocationServicesIsEnabled({
   message: "Use Location ?",
@@ -46,7 +50,7 @@ function HomeScreen() {
         <Text>Turtles Saved</Text>
         <View style={styles.home_log} />
       </View>
-      <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
 }
@@ -73,7 +77,7 @@ function MapScreenSelection() {
           {mapOptions}
       </ScrollView>
 
-      <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
 }
@@ -190,7 +194,7 @@ function ClassifyScreen() {
   return (
     <View>
       <Text>Classify</Text>
-      <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
 }
@@ -199,69 +203,12 @@ function LogScreen() {
   return (
     <View>
       <Text>Log</Text>
-      <Navbar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
 }
 
 const Stack = createNativeStackNavigator();
-
-const Navbar = props => {
-  const listItems = props.images.map((image, index) =>
-      <NavItem image={image} width={42} height={49} label={props.labels[index]} key={index}/>
-  );
-
-  return (
-    <View style={styles.rectangle}>
-      {listItems}
-    </View>
-
-  );
-}
-function NavItem(props) {
-  var style = {
-    justifyContent: "center",
-    textAlign: "center",
-    alignItems: "center",
-  };
-  
-  const navigation = useNavigation();
-  return (
-    <TouchableOpacity onPress={() => navigation.navigate(props.label)}>
-      <View style={style}>
-        <Iconoclast imgUri={props.image} width={props.width} height={props.height} label={props.label}/>
-        {/* <Link to=""/> */}
-        <Label label={props.label} />
-      </View>
-    </TouchableOpacity>
-  );
-}
-function Iconoclast(props)  {
-  return (
-    <View>
-      <ImageBackground source={button} style={styles.navlog}>
-        <Image source={props.imgUri} style={{
-          width: props.width,
-          height: props.height,
-          marginTop: -10,
-        }}>
-        </Image>
-      </ImageBackground>
-    </View>
-  );
-}
-function Label(props) {
-  return (
-    <ImageBackground source={nametag} style={{
-      width: 69.34,
-      height: 18.13
-    }}>
-      <Text style={styles.label}>
-        {props.label}
-      </Text>
-    </ImageBackground>
-  );
-}
 
 export default function App() {
   return (
