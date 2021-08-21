@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { Camera} from 'expo-camera';
 
 const ClassifyPane = () => {
@@ -24,6 +24,7 @@ const ClassifyPane = () => {
   }
   return (
     <View style={styles.container}>
+      <Text style={styles.text}>classify</Text>
       <Camera style={styles.camera} ref={ref => {setCameraRef(ref);}}/>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -53,7 +54,7 @@ const ClassifyPane = () => {
                 });
               }
             }}>
-            <Text style={styles.text}> Flip </Text>
+            <Text style={styles.buttonText}> capture </Text>
           </TouchableOpacity>
         </View>
     </View>
@@ -69,24 +70,34 @@ const styles = StyleSheet.create({
     },
     camera: {
       width:"70%",
-      height:"60%",
+      height:"50%",
       alignSelf:'center',
-      marginTop: '10%',
+      marginTop: '5%',
       overflow: 'hidden',
     },
     buttonContainer: {
       flex: 1,
       flexDirection: 'row',
       margin: 20,
+      justifyContent: 'center',
     },
     button: {
-      flex: 0.12,
-      alignSelf: 'flex-end',
+      width: 162,
+      height: 41,
+      borderWidth: 1,
+      borderColor: '#BED751',
+      borderRadius: 10,
       alignItems: 'center',
     },
     text: {
-      fontSize: 18,
-      color: 'white',
+      fontSize: 36,
+      color: '#BED751',
+      alignSelf:'center',
+    },
+    buttonText: {
+      fontSize: 24,
+      color: '#E74C3C',
+      alignSelf:'center',
     },
 });
 export default ClassifyPane;
