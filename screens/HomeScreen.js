@@ -3,17 +3,15 @@ import { Text, View } from 'react-native';
 import NavBar from '../components/NavBar';
 import styles from '../styles';
 
-function HomeScreen() {
-  return (
+const HomeScreen = props => (
+  <View>
     <View>
-      <View>
-        <Text>Home</Text>
-        <Text>Turtles Saved</Text>
-        <View style={styles.home_log} />
-      </View>
-      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+      <Text>Home</Text>
+      <Text>Turtles Saved</Text>
+      <View style={styles.home_log} />
     </View>
-  );
-}
+    <NavBar images={props.images} labels={props.labels} />
+  </View>
+);
 
 export default HomeScreen

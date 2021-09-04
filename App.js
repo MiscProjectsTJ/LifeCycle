@@ -3,16 +3,14 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component, useState, useEffect } from 'react';
 import { Icon } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
-import { Dimensions, StyleSheet, Text,TouchableOpacity, View, ScrollView, PermissionsAndroid } from 'react-native';
-import { Image, ImageBackground } from 'react-native';
+import { Dimensions, StyleSheet, Text, Button, TouchableOpacity, View, ScrollView, PermissionsAndroid } from 'react-native';
+import { Image } from 'react-native';
 
 // REACT NAVIGATION IMPORTS
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
 // IMAGE IMPORTS
-import button from './icons/Ellipse29.png';
-import nametag from './icons/nametag.png';
 import map from './icons/map1.png';
 import log from './icons/log.png';
 import recycle from './icons/recycle.png';
@@ -23,7 +21,20 @@ import 'react-native-gesture-handler';
 import {mapInfo} from './map.js';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
+
+// OTHER
+import styles from './styles';
 import NavBar from './components/NavBar';
+import SQLite from 'react-native-sqlite-storage';
+
+const db = SQLite.openDatabase(
+  {
+    name: 'TestDB',
+    location: 'default'
+  },
+  () => { },
+  error => { console.log(error) }
+);
 
 LocationServicesDialogBox.checkLocationServicesIsEnabled({
   message: "Use Location ?",
@@ -42,13 +53,43 @@ const { height, width } = Dimensions.get("window");
 const images = [map, log, recycle]
 const labels = ['MAP', 'LOG', 'CLASSIFY']
 
-function HomeScreen() {
+const HomeScreen = () => {
+  const [data, setD] = useState({});
+
+  const setData = async () => {
+    await db.transaction(async (tx) => {
+      await tx.executeSql(
+        "INSERT INTO Users (Name, Age) VALUES ('bob', '12')"
+      )
+    })
+  }
+
+  const getData = () => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT Name, Age FROM Users",
+        [],
+        (tx, results) => {
+          var len = results.rows.length;
+          if (len > 0) {
+            var userName = results.rows.item(0).Name;
+            var userAge = results.rows.item(1).Age;
+            setD({'name': userName, 'age': userAge});
+          }
+        }
+      )
+    })
+  }
+
   return (
     <View>
       <View>
         <Text>Home</Text>
         <Text>Turtles Saved</Text>
         <View style={styles.home_log} />
+        <Button title="click for sex" onPress={() => setData()} />
+        <Button title="click for return" onPress={() => getData()} />
+        <Text>here data: {JSON.stringify(data)}</Text>
       </View>
       <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
@@ -211,6 +252,20 @@ function LogScreen() {
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  useEffect(() => {
+    createTable();
+  });
+
+  const createTable = () => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "CREATE TABLE IF NOT EXISTS "
+        +"Users "
+        +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Age INTEGER);"
+      )
+    })
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="HOME"        
@@ -233,95 +288,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#36425C',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rectangle: {
-    width: width,
-    height: 0.1 * height,
-    marginTop: 0.822 * height,
-    position: 'absolute',
-    backgroundColor: "#8AC755",
-    flexDirection: "row",
-    justifyContent: "space-evenly"
-  },
-  layoutMap: {
-    flexDirection:'row',
-    justifyContent:'space-around',
-    alignItems:'center',
-  },
-  rectangleMap: {
-    width: 0.9 * width,
-    height: 0.15 * height,
-    borderRadius: 15,
-    marginTop: 0.04 * height,
-    backgroundColor: '#8AC755',
-    marginLeft: 0.5 * 0.1 * width
-  },
-  imageMap: {
-    width: 0.27 * width,
-    height: 0.15 * height,
-    marginLeft: -30
-  },  
-  imageMap2: {
-    width: 0.1 * width,
-    height: 0.05 * height,
-  },
-  mapScreenContainer: {
-    alignItems: 'center',
-    width: 100,
-    backgroundColor: 'transparent',
-    height: 100,
-  },
-  mapScreenTextContainer: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  mapScreenText: {
-    textAlign: 'center',
-    paddingHorizontal: 5,
-    flex: 1,
-  },
-  mapScreenIcon: {
-    paddingTop:5,
-  },
-  elevation: {
-    elevation: 5,
-    shadowColor: '#000000',
-  },
-  badge: {
-    textAlign: "center",
-    justifyContent: 'center',
-    width: "100%",
-    marginTop: 0,
-  },
-  navlog: {
-    width: 79.34,
-    height: 70,
-    marginTop: -20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  label: {
-    position: 'relative',
-    textAlign: "center",
-    justifyContent: "center",
-    color: "#19C5E0"
-  },
-  home_log: {
-    width: 0.9 * width,
-    height: 0.43 * height,
-    marginTop: 0.1 * height,
-    backgroundColor: '#8AC755',
-    borderRadius: 10,
-    borderWidth: 1,
-    // borderColor: '#fff',
-  }
-});

@@ -1,6 +1,10 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, Text, Image, ImageBackground } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 import styles from '../styles';
+import nametag from '../icons/nametag.png';
+import button from '../icons/Ellipse29.png';
 
 const Iconoclast = props => (
   <View>
