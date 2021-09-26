@@ -32,6 +32,7 @@ import arrow from "./7arrow.png";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
 
+ MapboxGL.requestAndroidLocationPermissions()
 LocationServicesDialogBox.checkLocationServicesIsEnabled({
   message: "Use Location ?",
   ok: "YES",
@@ -111,9 +112,9 @@ function MapScreen({ navigation, route }) {
       <MapboxGL.MapView style={({ width: width }, { height: 0.4 * height })}>
         <MapboxGL.UserLocation visible={true} />
         <MapboxGL.Camera
-          zoomLevel={10}
-          followUserMode={"normal"}
-          followUserLocation
+            zoomLevel={-1}
+            scrollEnabled={false}
+            logoEnabled={true}
         />
       </MapboxGL.MapView>
       <Image
@@ -192,7 +193,7 @@ function MapScreen({ navigation, route }) {
                         ]}
                       >
                         <Text style={{ fontSize: 15, textAlign:"center" }}>
-                          {x} {listAddress[x]}
+                          {"Point " + x} {listAddress[x]}
                         </Text>
                       </View>
                     </TouchableOpacity>
@@ -224,10 +225,11 @@ function MapScreen({ navigation, route }) {
                   >
                     <MapboxGL.UserLocation visible={true} />
                     <MapboxGL.Camera
-                      minZoomLevel={7}
-                      followUserMode={"normal"}
-                      followUserLocation
-                      zoomLevel={9}
+                      animationDuration={5000}
+                      zoomLevel={8}
+                      centerCoordinate={[long, lat]}
+                      scrollEnabled={false}
+                      logoEnabled={true}
                     />
                     {mapResults}
                   </MapboxGL.MapView>
@@ -239,6 +241,7 @@ function MapScreen({ navigation, route }) {
             console.log(err);
           });
       }
+      
     }, 5000);
   }, [update]);
 
