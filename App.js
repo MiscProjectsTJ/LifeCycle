@@ -4,7 +4,7 @@ import React, { Component, useState, useEffect } from 'react';
 import { Icon } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { Dimensions, StyleSheet, Text, Button, TouchableOpacity, View, ScrollView, PermissionsAndroid } from 'react-native';
-import { Image } from 'react-native';
+import { Image, TextInput } from 'react-native';
 
 // REACT NAVIGATION IMPORTS
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -56,25 +56,27 @@ const labels = ['MAP', 'LOG', 'CLASSIFY']
 const HomeScreen = () => {
   const [data, setD] = useState({});
 
-  const setData = async () => {
+  const setData = async (date, label) => { // adds new data to table 
     await db.transaction(async (tx) => {
       await tx.executeSql(
-        "INSERT INTO Users (Name, Age) VALUES ('bob', '12')"
+        "INSERT INTO Logs (Date, Label) VALUES (?, ?)",
+        [date, label]
       )
     })
   }
 
-  const getData = () => {
+  const getData = () => { // retrieves data from table
     db.transaction((tx) => {
       tx.executeSql(
-        "SELECT Name, Age FROM Users",
+        "SELECT Date, Label FROM Logs",
         [],
         (tx, results) => {
           var len = results.rows.length;
           if (len > 0) {
-            var userName = results.rows.item(0).Name;
-            var userAge = results.rows.item(1).Age;
-            setD({'name': userName, 'age': userAge});
+            var date = results.rows.item(0).Date;
+            var img = results.rows.item(0).Image;
+            var label = results.rows.item(0).Label
+            setD({'date': date, 'label': label});
           }
         }
       )
@@ -87,7 +89,7 @@ const HomeScreen = () => {
         <Text>Home</Text>
         <Text>Turtles Saved</Text>
         <View style={styles.home_log} />
-        <Button title="click for sex" onPress={() => setData()} />
+        <Button title="click for sex" onPress={() => setData(199, 'FUNNY NUMBER')} />
         <Button title="click for return" onPress={() => getData()} />
         <Text>here data: {JSON.stringify(data)}</Text>
       </View>
@@ -252,7 +254,7 @@ function LogScreen() {
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  useEffect(() => {
+  useEffect(() => { // creates Logs table upon initialization of App
     createTable();
   });
 
@@ -260,8 +262,8 @@ export default function App() {
     db.transaction((tx) => {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS "
-        +"Users "
-        +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Age INTEGER);"
+        +"Logs "
+        +"(Date INTEGER, Label STRING);"
       )
     })
   }
