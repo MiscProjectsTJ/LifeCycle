@@ -26,6 +26,7 @@ import LocationServicesDialogBox from "react-native-android-location-services-di
 import styles from './styles';
 import NavBar from './components/NavBar';
 import SQLite from 'react-native-sqlite-storage';
+import TextBox from './components/textbox';
 
 const db = SQLite.openDatabase(
   {
@@ -73,10 +74,10 @@ const HomeScreen = () => {
         (tx, results) => {
           var len = results.rows.length;
           if (len > 0) {
-            var date = results.rows.item(0).Date;
-            var img = results.rows.item(0).Image;
-            var label = results.rows.item(0).Label
-            setD({'date': date, 'label': label});
+            var date = results.rows.item(len-1).Date;
+            var img = results.rows.item(len-1).Image;
+            var label = results.rows.item(len-1).Label
+            setD({'date': date+1, 'label': label});
           }
         }
       )
@@ -89,13 +90,30 @@ const HomeScreen = () => {
         <Text>Home</Text>
         <Text>Turtles Saved</Text>
         <View style={styles.home_log} />
-        <Button title="click for sex" onPress={() => setData(199, 'FUNNY NUMBER')} />
+        <Button title="click for sex" onPress={() => setData(data.date, 'FUNNY NUMBER')} />
         <Button title="click for return" onPress={() => getData()} />
         <Text>here data: {JSON.stringify(data)}</Text>
       </View>
       <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
+}
+
+const LogScreen = () => {
+  return (
+    <View>
+      <Text>Log Screen</Text>
+      <View style={styles.home_log} />
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+      <TextBox>
+        <Text>
+          {data.date}
+          {data.label}
+        </Text>
+      </TextBox>
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+    </View>
+  )
 }
 
 function MapScreenSelection() {
@@ -237,15 +255,6 @@ function ClassifyScreen() {
   return (
     <View>
       <Text>Classify</Text>
-      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
-    </View>
-  );
-}
-
-function LogScreen() {
-  return (
-    <View>
-      <Text>Log</Text>
       <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
