@@ -1,38 +1,41 @@
-// import HomeScreen from './Home'
-import { Dimensions, StyleSheet, Text,TouchableOpacity, View } from 'react-native';
-import ClassifyPane from './ClassifyPane.js';
-import { StatusBar } from "expo-status-bar";
-import React, { Component, useState, useEffect } from "react";
-import { Icon } from "react-native-elements";
-import { NavigationContainer } from "@react-navigation/native";
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ScrollView,
-  ToastAndroid,
-  PermissionsAndroid,
-} from "react-native";
-import { Image, ImageBackground } from "react-native";
-import * as Clipboard from "expo-clipboard";
+// REACT/REACT NATIVE COMPONENT IMPORTS
+import { StatusBar } from 'expo-status-bar';
+import React, { Component, useState, useEffect } from 'react';
+import { Icon } from 'react-native-elements';
+import { NavigationContainer } from '@react-navigation/native';
+import { Dimensions, StyleSheet, Text, Button, TouchableOpacity, View, ScrollView, PermissionsAndroid } from 'react-native';
+import { Image, TextInput } from 'react-native';
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useNavigation } from "@react-navigation/native";
+// REACT NAVIGATION IMPORTS
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
-import button from "./Ellipse29.png";
-import nametag from "./nametag.png";
-import map from "./map1.png";
-import log from "./log.png";
-import recycle from "./recycle.png";
-import "react-native-gesture-handler";
-import loadGif from "./gifs/R.gif";
+// IMAGE IMPORTS
+import map from './icons/map1.png';
+import log from './icons/log.png';
+import recycle from './icons/recycle.png';
+import arrow from './icons/7arrow.png';
+import 'react-native-gesture-handler';
 
-import { mapInfo } from "./map.js";
-import arrow from "./7arrow.png";
-import MapboxGL from "@react-native-mapbox-gl/maps";
+// MAP IMPORTS
+import {mapInfo} from './map.js';
+import MapboxGL from '@react-native-mapbox-gl/maps';
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
+
+// OTHER
+import styles from './styles';
+import NavBar from './components/NavBar';
+import SQLite from 'react-native-sqlite-storage';
+import TextBox from './components/textbox';
+
+const db = SQLite.openDatabase(
+  {
+    name: 'TestDB',
+    location: 'default'
+  },
+  () => { },
+  error => { console.log(error) }
+);
 
  MapboxGL.requestAndroidLocationPermissions()
 LocationServicesDialogBox.checkLocationServicesIsEnabled({
@@ -55,20 +58,66 @@ const { height, width } = Dimensions.get("window");
 const images = [map, log, recycle];
 const labels = ["MAP", "LOG", "CLASSIFY"];
 
-function HomeScreen() {
+const HomeScreen = () => {
+  const [data, setD] = useState({});
+
+  const setData = async (date, label) => { // adds new data to table 
+    await db.transaction(async (tx) => {
+      await tx.executeSql(
+        "INSERT INTO Logs (Date, Label) VALUES (?, ?)",
+        [date, label]
+      )
+    })
+  }
+
+  const getData = () => { // retrieves data from table
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT Date, Label FROM Logs",
+        [],
+        (tx, results) => {
+          var len = results.rows.length;
+          if (len > 0) {
+            var date = results.rows.item(len-1).Date;
+            var img = results.rows.item(len-1).Image;
+            var label = results.rows.item(len-1).Label
+            setD({'date': date+1, 'label': label});
+          }
+        }
+      )
+    })
+  }
+
   return (
     <View>
       <View>
         <Text>Home</Text>
         <Text>Turtles Saved</Text>
         <View style={styles.home_log} />
+        <Button title="click for sex" onPress={() => setData(data.date, 'FUNNY NUMBER')} />
+        <Button title="click for return" onPress={() => getData()} />
+        <Text>here data: {JSON.stringify(data)}</Text>
       </View>
-      <Navbar
-        images={[map, log, recycle]}
-        labels={["MAP", "LOG", "CLASSIFY"]}
-      />
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
+}
+
+const LogScreen = () => {
+  return (
+    <View>
+      <Text>Log Screen</Text>
+      <View style={styles.home_log} />
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+      <TextBox>
+        <Text>
+          {data.date}
+          {data.label}
+        </Text>
+      </TextBox>
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+    </View>
+  )
 }
 
 function MapScreenSelection() {
@@ -95,10 +144,7 @@ function MapScreenSelection() {
     <View style={{ backgroundColor: "#36425C" }}>
       <ScrollView>{mapOptions}</ScrollView>
 
-      <Navbar
-        images={[map, log, recycle]}
-        labels={["MAP", "LOG", "CLASSIFY"]}
-      />
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
 }
@@ -264,94 +310,28 @@ function ClassifyScreen() {
   return (
     <View>
       <Text>Classify</Text>
-      <Navbar
-        images={[map, log, recycle]}
-        labels={["MAP", "LOG", "CLASSIFY"]}
-      />
-    </View>
-  );
-}
-function LogScreen() {
-  return (
-    <View>
-      <Text>Log</Text>
-      <Navbar
-        images={[map, log, recycle]}
-        labels={["MAP", "LOG", "CLASSIFY"]}
-      />
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
   );
 }
 
 const Stack = createNativeStackNavigator();
 
-const Navbar = (props) => {
-  const listItems = props.images.map((image, index) => (
-    <NavItem
-      image={image}
-      width={42}
-      height={49}
-      label={props.labels[index]}
-      key={index}
-    />
-  ));
-
-  return <View style={styles.rectangle}>{listItems}</View>;
-};
-function NavItem(props) {
-  var style = {
-    justifyContent: "center",
-    textAlign: "center",
-    alignItems: "center",
-  };
-
-  const navigation = useNavigation();
-  return (
-    <TouchableOpacity onPress={() => navigation.navigate(props.label)}>
-      <View style={style}>
-        <Iconoclast
-          imgUri={props.image}
-          width={props.width}
-          height={props.height}
-          label={props.label}
-        />
-        {/* <Link to=""/> */}
-        <Label label={props.label} />
-      </View>
-    </TouchableOpacity>
-  );
-}
-function Iconoclast(props) {
-  return (
-    <View>
-      <ImageBackground source={button} style={styles.navlog}>
-        <Image
-          source={props.imgUri}
-          style={{
-            width: props.width,
-            height: props.height,
-            marginTop: -10,
-          }}
-        ></Image>
-      </ImageBackground>
-    </View>
-  );
-}
-function Label(props) {
-  return (
-    <ImageBackground
-      source={nametag}
-      style={{
-        width: 69.34,
-        height: 18.13,
-      }}
-    >
-      <Text style={styles.label}>{props.label}</Text>
-    </ImageBackground>
-  );
-}
-
 export default function App() {
+  useEffect(() => { // creates Logs table upon initialization of App
+    createTable();
+  });
+
+  const createTable = () => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "CREATE TABLE IF NOT EXISTS "
+        +"Logs "
+        +"(Date INTEGER, Label STRING);"
+      )
+    })
+  }
+  
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -395,95 +375,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#36425C",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  rectangle: {
-    width: width,
-    height: 0.1 * height,
-    marginTop: 0.822 * height,
-    position: "absolute",
-    backgroundColor: "#8AC755",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-  },
-  layoutMap: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  rectangleMap: {
-    width: 0.9 * width,
-    height: 0.15 * height,
-    borderRadius: 15,
-    marginTop: 0.04 * height,
-    backgroundColor: "#8AC755",
-    marginLeft: 0.5 * 0.1 * width,
-  },
-  imageMap: {
-    width: 0.27 * width,
-    height: 0.15 * height,
-    marginLeft: -30,
-  },
-  imageMap2: {
-    width: 0.1 * width,
-    height: 0.05 * height,
-  },
-  mapScreenContainer: {
-    alignItems: "center",
-    width: 100,
-    backgroundColor: "transparent",
-    height: 100,
-  },
-  mapScreenTextContainer: {
-    backgroundColor: "white",
-    borderRadius: 10,
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  mapScreenText: {
-    textAlign: "center",
-    paddingHorizontal: 5,
-    flex: 1,
-  },
-  mapScreenIcon: {
-    paddingTop: 5,
-  },
-  elevation: {
-    elevation: 5,
-    shadowColor: "#000000",
-  },
-  badge: {
-    textAlign: "center",
-    justifyContent: "center",
-    width: "100%",
-    marginTop: 0,
-  },
-  navlog: {
-    width: 79.34,
-    height: 70,
-    marginTop: -20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  label: {
-    position: "relative",
-    textAlign: "center",
-    justifyContent: "center",
-    color: "#19C5E0",
-  },
-  home_log: {
-    width: 0.9 * width,
-    height: 0.43 * height,
-    marginTop: 0.1 * height,
-    backgroundColor: "#8AC755",
-    borderRadius: 10,
-    borderWidth: 1,
-    // borderColor: '#fff',
-  },
-});
