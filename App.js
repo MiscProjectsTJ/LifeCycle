@@ -1,4 +1,6 @@
 // import HomeScreen from './Home'
+import { Dimensions, StyleSheet, Text,TouchableOpacity, View } from 'react-native';
+import ClassifyPane from './ClassifyPane.js';
 import { StatusBar } from "expo-status-bar";
 import React, { Component, useState, useEffect } from "react";
 import { Icon } from "react-native-elements";
@@ -49,7 +51,6 @@ MapboxGL.setAccessToken(
   "pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A"
 );
 MapboxGL.setConnected(true);
-
 const { height, width } = Dimensions.get("window");
 const images = [map, log, recycle];
 const labels = ["MAP", "LOG", "CLASSIFY"];
@@ -270,7 +271,6 @@ function ClassifyScreen() {
     </View>
   );
 }
-
 function LogScreen() {
   return (
     <View>
