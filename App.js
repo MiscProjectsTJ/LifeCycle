@@ -37,22 +37,26 @@ const db = SQLite.openDatabase(
   error => { console.log(error) }
 );
 
+ MapboxGL.requestAndroidLocationPermissions()
 LocationServicesDialogBox.checkLocationServicesIsEnabled({
   message: "Use Location ?",
   ok: "YES",
-  cancel: "NO"
-}).then(function(success) {
-  console.log(success); // success => "enabled"
-}).catch((error) => {
-  console.log(error.message); // error.message => "disabled"
-});
+  cancel: "NO",
+})
+  .then(function (success) {
+    console.log(success); // success => "enabled"
+  })
+  .catch((error) => {
+    console.log(error.message); // error.message => "disabled"
+  });
 
-MapboxGL.setAccessToken("pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A");
+MapboxGL.setAccessToken(
+  "pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A"
+);
 MapboxGL.setConnected(true);
-
 const { height, width } = Dimensions.get("window");
-const images = [map, log, recycle]
-const labels = ['MAP', 'LOG', 'CLASSIFY']
+const images = [map, log, recycle];
+const labels = ["MAP", "LOG", "CLASSIFY"];
 
 const HomeScreen = () => {
   const [data, setD] = useState({});
@@ -117,26 +121,28 @@ const LogScreen = () => {
 }
 
 function MapScreenSelection() {
-
-  var mapOptions = []
+  var mapOptions = [];
   const navigation = useNavigation();
-  for(let x in mapInfo) {
+  for (let x in mapInfo) {
     mapOptions.push(
-      <View key={x} style={[styles.rectangleMap, styles.elevation, styles.layoutMap]}>
-        <Image style={styles.imageMap} source={mapInfo[x]["Image"]}/>
-        <Text style={ {fontSize:30} }>{mapInfo[x]["Type"]}</Text>
-        <TouchableOpacity key={x} onPress={() => navigation.navigate('Map Screen', {index: x})}>
-          <Image style={styles.imageMap2} source={arrow}/>      
+      <View
+        key={x}
+        style={[styles.rectangleMap, styles.elevation, styles.layoutMap]}
+      >
+        <Image style={styles.imageMap} source={mapInfo[x]["Image"]} />
+        <Text style={{ fontSize: 30 }}>{mapInfo[x]["Type"]}</Text>
+        <TouchableOpacity
+          key={x}
+          onPress={() => navigation.navigate("Map Screen", { index: x })}
+        >
+          <Image style={styles.imageMap2} source={arrow} />
         </TouchableOpacity>
       </View>
-
-    )
+    );
   }
   return (
-    <View style={{backgroundColor: "#36425C"}}>
-      <ScrollView>  
-          {mapOptions}
-      </ScrollView>
+    <View style={{ backgroundColor: "#36425C" }}>
+      <ScrollView>{mapOptions}</ScrollView>
 
       <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
     </View>
@@ -144,108 +150,157 @@ function MapScreenSelection() {
 }
 
 function MapScreen({ navigation, route }) {
-  var text2 = []
-  text2.push(
-    <Text>Loading...</Text>
-  )
-  const update = true
+  var text2 = [];
+  text2.push(<Text></Text>);
+  const update = true;
   const [text, setText] = useState(text2);
   const [mapText, setMapText] = useState(
-    <MapboxGL.MapView style={{width: width}, {height: 0.4*height}}>
-      <MapboxGL.UserLocation visible={true} />
-      <MapboxGL.Camera
-        zoomLevel={10}
-        followUserMode={'normal'}
-        followUserLocation
-      />
-    </MapboxGL.MapView>
+    <View>
+      <MapboxGL.MapView style={({ width: width }, { height: 0.4 * height })}>
+        <MapboxGL.UserLocation visible={true} />
+        <MapboxGL.Camera
+            zoomLevel={-1}
+            scrollEnabled={false}
+            logoEnabled={true}
+        />
+      </MapboxGL.MapView>
+      <Image
+        source={loadGif}
+        style={{
+          width: "50%",
+          height: "70%",
+          position: "absolute",
+          top: "90%",
+          left: "25%",
+        }}
+      ></Image>
+    </View>
   );
-  useEffect(() => { 
-    setTimeout(() =>  {
-      var lat = MapboxGL.locationManager["_lastKnownLocation"]["coords"]["latitude"]
-        var long = MapboxGL.locationManager["_lastKnownLocation"]["coords"]["longitude"]
-        var listAddress = []
-        var listLong = []
-        var listLat = []
-        var results = []
-        var mapResults = []
 
-          
-          results.push(<Text>Press to copy to clipboard.</Text>)
-          let tempKeys = mapInfo[route.params.index]["Keywords"]
-          for(let query in tempKeys) {
-            fetch("https://api.mapbox.com/geocoding/v5/mapbox.places/"+tempKeys[query]+".json?country=US&proximity="+long+","+lat+"&limit=3&access_token=pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A")
-              .then(response => response.json())
-              .then(response => {
-                for(let i = 0; i<response["features"].length; i++) {
-                  let temp =  response["features"][i]
-                  listAddress.push(temp["place_name"])
-                  listLong.push(temp.geometry.coordinates[0])
-                  listLat.push(temp.geometry.coordinates[1])
-                }  
-                if((3*tempKeys.length) === listAddress.length) {
-                  if(listAddress.length === 0) {
-                    setText(<Text>Map API is offline. Sorry for the inconvenience.</Text>)
-                  } else {
-                    console.log(listAddress)
-                    console.log(listLong)
-                    console.log(listLat)
-                    for(let x in listAddress){
-                      results.push(
-                        <View key={x} style={[styles.rectangleMap, styles.elevation, styles.layoutMap]}>
-                          <Text style={ {fontSize:15} }>{x}  {listAddress[x]}</Text>
-                        </View>
-                      )
-                      mapResults.push(
-                        <MapboxGL.PointAnnotation
-                          key={x}
-                          id={x}
-                          coordinate={[listLong[x],listLat[x]]}>
-                          <View style={{
-                                    height: 30, 
-                                    width: 30, 
-                                    backgroundColor: '#00cccc', 
-                                    borderRadius: 50, 
-                                    borderColor: '#fff', 
-                                    borderWidth: 3
-                                  }} />
-                          <MapboxGL.Callout 
-                            title={"Point " + x}
-                          />
-                        </MapboxGL.PointAnnotation>
-                      )
-                    }
-                    setText(results)
-                    setMapText(
-                      <MapboxGL.MapView style={{width: width}, {height: 0.4*height}}>
-                        <MapboxGL.UserLocation visible={true} />
-                        <MapboxGL.Camera
-                          zoomLevel={6}
-                          followUserMode={'normal'}
-                          followUserLocation
-                        />
-                        {mapResults}
-                      </MapboxGL.MapView>
-                    )
-                  }
+  function copyToClipboard(args) {
+    Clipboard.setString(args);
+    ToastAndroid.show(
+      "The address has been copied succesfully!",
+      ToastAndroid.SHORT
+    );
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      var lat =
+        MapboxGL.locationManager["_lastKnownLocation"]["coords"]["latitude"];
+      var long =
+        MapboxGL.locationManager["_lastKnownLocation"]["coords"]["longitude"];
+      var listAddress = [];
+      var listLong = [];
+      var listLat = [];
+      var results = [];
+      var mapResults = [];
+
+      results.push(<Text style={{ fontSize:20,color:"red",textAlign:"center"}}>Press on one of the addresses below to copy to clipboard.</Text>);
+      let tempKeys = mapInfo[route.params.index]["Keywords"];
+      for (let query in tempKeys) {
+        fetch(
+          "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+            tempKeys[query] +
+            ".json?country=US&proximity=" +
+            long +
+            "," +
+            lat +
+            "&limit=3&access_token=pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A"
+        )
+          .then((response) => response.json())
+          .then((response) => {
+            for (let i = 0; i < response["features"].length; i++) {
+              let temp = response["features"][i];
+              listAddress.push(temp["place_name"]);
+              listLong.push(temp.geometry.coordinates[0]);
+              listLat.push(temp.geometry.coordinates[1]);
+            }
+            if (3 * tempKeys.length === listAddress.length) {
+              if (listAddress.length === 0) {
+                setText(
+                  <Text>Map API is offline. Sorry for the inconvenience.</Text>
+                );
+              } else {
+                console.log(listAddress);
+                console.log(listLong);
+                console.log(listLat);
+                for (let x in listAddress) {
+                  results.push(
+                    <TouchableOpacity
+                      onPress={() => copyToClipboard(listAddress[x])}
+                    >
+                      <View
+                        key={x}
+                        style={[
+                          styles.rectangleMap,
+                          styles.elevation,
+                          styles.layoutMap,
+                        ]}
+                      >
+                        <Text style={{ fontSize: 15, textAlign:"center" }}>
+                          {"Point " + x} {listAddress[x]}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                  mapResults.push(
+                    <MapboxGL.PointAnnotation
+                      key={x}
+                      id={x}
+                      coordinate={[listLong[x], listLat[x]]}
+                    >
+                      <View
+                        style={{
+                          height: 30,
+                          width: 30,
+                          backgroundColor: "#00cccc",
+                          borderRadius: 50,
+                          borderColor: "#fff",
+                          borderWidth: 3,
+                        }}
+                      />
+                      <MapboxGL.Callout title={"Point " + x} />
+                    </MapboxGL.PointAnnotation>
+                  );
                 }
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          }
-    
-    }, 5000)
-  }, [update])
-  
+                setText(results);
+                setMapText(
+                  <MapboxGL.MapView
+                    style={({ width: width }, { height: 0.4 * height })}
+                  >
+                    <MapboxGL.UserLocation visible={true} />
+                    <MapboxGL.Camera
+                      animationDuration={5000}
+                      zoomLevel={8}
+                      centerCoordinate={[long, lat]}
+                      scrollEnabled={false}
+                      logoEnabled={true}
+                    />
+                    {mapResults}
+                  </MapboxGL.MapView>
+                );
+              }
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      
+    }, 5000);
+  }, [update]);
 
   return (
-    <View>
+    <View style={{justifyContent:"center", textAlign: 'center', backgroundColor:"#36425C"}}>
       {mapText}
-      <View style={{backgroundColor: "#36425C"}, {height:height-(0.4*height)}}>
-        <ScrollView style={{flex:1}}>
-          {text}
-        </ScrollView>
+      <View
+        style={
+          ({ backgroundColor: "#36425C" }, { height: height - 0.4 * height })
+        }
+      >
+        <ScrollView style={{ flex: 1}}>{text}</ScrollView>
       </View>
     </View>
   );
@@ -276,25 +331,46 @@ export default function App() {
       )
     })
   }
-
+  
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HOME"        
+      <Stack.Navigator
+        initialRouteName="HOME"
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#36425C',
+            backgroundColor: "#36425C",
           },
-          headerTintColor: '#BED751',
+          headerTintColor: "#BED751",
           headerTitleStyle: {
-            fontWeight: 'bold',
-          }
+            fontWeight: "bold",
+          },
         }}
       >
-        <Stack.Screen style={styles.container} name="HOME" component={HomeScreen}/>
-        <Stack.Screen style={styles.container} name="CLASSIFY" component={ClassifyScreen} />
-        <Stack.Screen style={styles.container} name="LOG" component={LogScreen} />
-        <Stack.Screen style={styles.container} name="MAP" component={MapScreenSelection} />
-        <Stack.Screen style={styles.container} name="Map Screen" component={MapScreen} />
+        <Stack.Screen
+          style={styles.container}
+          name="HOME"
+          component={HomeScreen}
+        />
+        <Stack.Screen
+          style={styles.container}
+          name="CLASSIFY"
+          component={ClassifyScreen}
+        />
+        <Stack.Screen
+          style={styles.container}
+          name="LOG"
+          component={LogScreen}
+        />
+        <Stack.Screen
+          style={styles.container}
+          name="MAP"
+          component={MapScreenSelection}
+        />
+        <Stack.Screen
+          style={styles.container}
+          name="Map Screen"
+          component={MapScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
