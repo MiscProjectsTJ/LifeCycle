@@ -1,4 +1,6 @@
 node_modules/
+android/
+yarn.lock
 .expo/
 npm-debug.*
 *.jks
