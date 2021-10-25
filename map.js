@@ -32,7 +32,7 @@ export const mapInfo = [
         {
         "Type": "Medicine",
         "Keywords": ["pharmacy"],
-        "Image": require("./plastic.png")
+        "Image": require("./icons/plastic.png")
     },
         {
         "Type": "Plastic",

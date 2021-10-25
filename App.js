@@ -3,8 +3,9 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component, useState, useEffect } from 'react';
 import { Icon } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
-import { Dimensions, StyleSheet, Text, Button, TouchableOpacity, View, ScrollView, PermissionsAndroid } from 'react-native';
+import { Dimensions, StyleSheet, Text, Button, TouchableOpacity, View, ScrollView, ImageBackground, PermissionsAndroid, ToastAndroid } from 'react-native';
 import { Image, TextInput } from 'react-native';
+import * as Clipboard from "expo-clipboard";
 
 // REACT NAVIGATION IMPORTS
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -15,16 +16,19 @@ import map from './icons/map1.png';
 import log from './icons/log.png';
 import recycle from './icons/recycle.png';
 import arrow from './icons/7arrow.png';
+import button from './icons/Ellipse29.png';
+import nametag from './icons/nametag.png';
+import loadGif from './gifs/R.gif'
 import 'react-native-gesture-handler';
 
 // MAP IMPORTS
-import {mapInfo} from './map.js';
+import { mapInfo } from './map.js';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
 
 // OTHER
 import styles from './styles';
-import NavBar from './components/NavBar';
+// import NavBar from './components/NavBar';
 import SQLite from 'react-native-sqlite-storage';
 import TextBox from './components/textbox';
 
@@ -37,7 +41,7 @@ const db = SQLite.openDatabase(
   error => { console.log(error) }
 );
 
- MapboxGL.requestAndroidLocationPermissions()
+MapboxGL.requestAndroidLocationPermissions()
 LocationServicesDialogBox.checkLocationServicesIsEnabled({
   message: "Use Location ?",
   ok: "YES",
@@ -59,6 +63,20 @@ const images = [map, log, recycle];
 const labels = ["MAP", "LOG", "CLASSIFY"];
 
 const HomeScreen = () => {
+
+  return (
+    <View>
+      <View>
+        <Text>Home</Text>
+        <Text>Turtles Saved</Text>
+        <View style={styles.home_log} />
+      </View>
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']} />
+    </View>
+  );
+}
+
+const LogScreen = () => {
   const [data, setD] = useState({});
 
   const setData = async (date, label) => { // adds new data to table 
@@ -78,10 +96,10 @@ const HomeScreen = () => {
         (tx, results) => {
           var len = results.rows.length;
           if (len > 0) {
-            var date = results.rows.item(len-1).Date;
-            var img = results.rows.item(len-1).Image;
-            var label = results.rows.item(len-1).Label
-            setD({'date': date+1, 'label': label});
+            var date = results.rows.item(len - 1).Date;
+            var img = results.rows.item(len - 1).Image;
+            var label = results.rows.item(len - 1).Label
+            setD({ 'date': date + 1, 'label': label });
           }
         }
       )
@@ -90,32 +108,12 @@ const HomeScreen = () => {
 
   return (
     <View>
-      <View>
-        <Text>Home</Text>
-        <Text>Turtles Saved</Text>
-        <View style={styles.home_log} />
-        <Button title="click for sex" onPress={() => setData(data.date, 'FUNNY NUMBER')} />
-        <Button title="click for return" onPress={() => getData()} />
-        <Text>here data: {JSON.stringify(data)}</Text>
-      </View>
-      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
-    </View>
-  );
-}
-
-const LogScreen = () => {
-  return (
-    <View>
       <Text>Log Screen</Text>
       <View style={styles.home_log} />
-      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
-      <TextBox>
-        <Text>
-          {data.date}
-          {data.label}
-        </Text>
-      </TextBox>
-      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+      <Button title="click for sex" onPress={() => setData(data.date, 'FUNNY NUMBER')} />
+      <Button title="click for return" onPress={() => getData()} />
+      <Text>here data: {JSON.stringify(data)}</Text>
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']} />
     </View>
   )
 }
@@ -144,14 +142,17 @@ function MapScreenSelection() {
     <View style={{ backgroundColor: "#36425C" }}>
       <ScrollView>{mapOptions}</ScrollView>
 
-      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+      <NavBar
+        images={[map, log, recycle]}
+        labels={["MAP", "LOG", "CLASSIFY"]}
+      />
     </View>
   );
 }
 
 function MapScreen({ navigation, route }) {
   var text2 = [];
-  text2.push(<Text></Text>);
+  text2.push(<Text key="text2"></Text>);
   const update = true;
   const [text, setText] = useState(text2);
   const [mapText, setMapText] = useState(
@@ -197,7 +198,7 @@ function MapScreen({ navigation, route }) {
       var results = [];
       var mapResults = [];
 
-      results.push(<Text style={{ fontSize:20,color:"red",textAlign:"center"}}>Press on one of the addresses below to copy to clipboard.</Text>);
+      results.push(<Text key="directions" style={{ fontSize:20,color:"red",textAlign:"center"}}>Press on one of the addresses below to copy to clipboard.</Text>);
       let tempKeys = mapInfo[route.params.index]["Keywords"];
       for (let query in tempKeys) {
         fetch(
@@ -229,6 +230,7 @@ function MapScreen({ navigation, route }) {
                 for (let x in listAddress) {
                   results.push(
                     <TouchableOpacity
+                      key={listAddress[x]}
                       onPress={() => copyToClipboard(listAddress[x])}
                     >
                       <View
@@ -310,12 +312,78 @@ function ClassifyScreen() {
   return (
     <View>
       <Text>Classify</Text>
-      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']}/>
+      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']} />
     </View>
   );
 }
 
 const Stack = createNativeStackNavigator();
+
+const NavBar = (props) => {
+  const listItems = props.images.map((image, index) => (
+    <NavItem
+      image={image}
+      width={42}
+      height={49}
+      label={props.labels[index]}
+      key={index}
+    />
+  ));
+
+  return <View style={styles.rectangle}>{listItems}</View>;
+};
+function NavItem(props) {
+  var style = {
+    justifyContent: "center",
+    textAlign: "center",
+    alignItems: "center",
+  };
+
+  const navigation = useNavigation();
+  return (
+    <TouchableOpacity onPress={() => navigation.navigate(props.label)}>
+      <View style={style}>
+        <Iconoclast
+          imgUri={props.image}
+          width={props.width}
+          height={props.height}
+          label={props.label}
+        />
+        {/* <Link to=""/> */}
+        <Label label={props.label} />
+      </View>
+    </TouchableOpacity>
+  );
+}
+function Iconoclast(props) {
+  return (
+    <View>
+      <ImageBackground source={button} style={styles.navlog}>
+        <Image
+          source={props.imgUri}
+          style={{
+            width: props.width,
+            height: props.height,
+            marginTop: -10,
+          }}
+        ></Image>
+      </ImageBackground>
+    </View>
+  );
+}
+function Label(props) {
+  return (
+    <ImageBackground
+      source={nametag}
+      style={{
+        width: 69.34,
+        height: 18.13,
+      }}
+    >
+      <Text style={styles.label}>{props.label}</Text>
+    </ImageBackground>
+  );
+}
 
 export default function App() {
   useEffect(() => { // creates Logs table upon initialization of App
@@ -326,12 +394,12 @@ export default function App() {
     db.transaction((tx) => {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS "
-        +"Logs "
-        +"(Date INTEGER, Label STRING);"
+        + "Logs "
+        + "(Date INTEGER, Label STRING);"
       )
     })
   }
-  
+
   return (
     <NavigationContainer>
       <Stack.Navigator
