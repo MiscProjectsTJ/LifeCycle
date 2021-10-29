@@ -33,16 +33,18 @@ const ClassifyPane = () => {
               "use strict";
               if(cameraRef){
                 let photo = await cameraRef.takePictureAsync({base64: true});
+                
                 setImg(photo);
+                body = JSON.stringify({"val":btoa(photo.base64)})
                 // return <Image source={img.uri}/>;
                 // console.log(JSON.stringify(img.base64));
-                fetch("http://192.168.0.112:5000/add", {
-                  method: "POST",
-                  headers: {
+                fetch("https://lifecycleapi-production.up.railway.app/add", {
+                  "method": "POST",
+                  "headers": {
                     Accept: "*/*",
                     "Content-Type": "application/json"
                   },
-                  body: JSON.stringify({val: img.uri}),
+                  "body": body,
                 })
                 .then(response => response.json())
                 .then(data => {
