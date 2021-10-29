@@ -28,6 +28,7 @@ import LocationServicesDialogBox from "react-native-android-location-services-di
 
 // OTHER
 import styles from './styles';
+import ClassifyPane from './ClassifyPane.js';
 // import NavBar from './components/NavBar';
 import SQLite from 'react-native-sqlite-storage';
 import TextBox from './components/textbox';
@@ -422,7 +423,7 @@ export default function App() {
         <Stack.Screen
           style={styles.container}
           name="CLASSIFY"
-          component={ClassifyScreen}
+          component={ClassifyPane}
         />
         <Stack.Screen
           style={styles.container}
