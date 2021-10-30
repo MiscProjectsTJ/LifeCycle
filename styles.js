@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     },
     home_log: {
         width: 0.9 * width,
-        height: 0.2 * height,
+        height: 0.4 * height,
         marginTop: 0.05 * width,
         marginLeft: 0.05 * width,
         marginRight: 0.05 * width,
@@ -92,7 +92,26 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         // borderColor: '#fff',
-    }
+    },
+    home_text: {
+        fontSize: 20,
+        color: '#FFFFFF',
+        alignSelf:'center',
+        marginTop: 5,
+        marginBottom: 5,
+      },
+    home_container: {
+        height: height,
+        backgroundColor: '#36425C',
+        alignItems: 'center',
+        color: '#FFFFFF'
+      },
+    heatmap : {
+        backgroundColor: "#2E2E33", 
+        marginTop: 10, 
+        marginLeft: 0.05*width, 
+        marginRight: 0.05*width
+    },
 });
 
 export default styles;

@@ -1,13 +1,13 @@
 // REACT/REACT NATIVE COMPONENT IMPORTS
 import { StatusBar } from 'expo-status-bar';
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component, useState, useEffect, useCallback } from 'react';
 import { Icon } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
+import HeatMap from 'react-native-heatmap-chart';
 import { Dimensions, StyleSheet, Text, Button, TouchableOpacity, View, ScrollView, ImageBackground, PermissionsAndroid, ToastAndroid } from 'react-native';
 import { Image, TextInput } from 'react-native';
 import * as Clipboard from "expo-clipboard";
 import * as Permissions from 'expo-permissions';
-//import * as MediaLibrary from 'expo-media-library';
 
 // REACT NAVIGATION IMPORTS
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,6 +19,7 @@ import log from './icons/log.png';
 import recycle from './icons/recycle.png';
 import arrow from './icons/7arrow.png';
 import button from './icons/Ellipse29.png';
+import turtle from './icons/turtle.png';
 import nametag from './icons/nametag.png';
 import loadGif from './gifs/R.gif'
 import 'react-native-gesture-handler';
@@ -31,9 +32,9 @@ import LocationServicesDialogBox from "react-native-android-location-services-di
 // OTHER
 import styles from './styles';
 import ClassifyPane from './ClassifyPane.js';
+import Grid from 'react-native-easy-grid';
 // import NavBar from './components/NavBar';
 import SQLite from 'react-native-sqlite-storage';
-import TextBox from './components/textbox';
 
 const db = SQLite.openDatabase(
   {
@@ -65,14 +66,41 @@ const { height, width } = Dimensions.get("window");
 const images = [map, log, recycle];
 const labels = ["MAP", "LOG", "CLASSIFY"];
 
-const HomeScreen = () => {
+const HomeScreen = (props) => {
 
+  setData('10-20-2021', 'plastic',turtle)
+  const [totalCnt, setTotalCnt] = useState('');
+  useEffect(() => {
+    setTotalCnt(getTotalData())
+    console.log("HOMESCREEN: ", totalCnt)
+  }, []);
+
+  const t =  parseInt(10/3) // totalCnt/3
+  console.log("Turtles: ", t)
+  const con = []
+  for (let i = 0; i < t; i++) {
+     con.push(<Image source={turtle} />);
+  }
+  const values = [0, 4, 6, 1, 7, 3, 0, 8, 6, 2, 0, 10, 20, 12, 0, 0, 10, 0, 17, 8, 0, 6, 0, 6, 10, 23, 0, 6, 10, 23] // getData()
+  const colors = 	['#504f55', '#655488', '#9F7DE1', '#FFFFFF']
+  // const blocksStyles
   return (
     <View>
-      <View>
-        <Text>Home</Text>
-        <Text>Turtles Saved</Text>
-        <View style={styles.home_log} />
+      <View style ={styles.home_container}>
+        <ScrollView>        
+          <View style={styles.home_log}>
+            <Text style={styles.home_text}> You have saved {JSON.stringify(totalCnt)} turtles </Text>
+            <View style= {{ flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
+              {con}
+            </View>
+          </View>
+          <Text style={styles.home_text}> Heatmap for last {values.length} days </Text>
+          <TouchableOpacity>
+            <ScrollView style={styles.heatmap}> 
+              <HeatMap numberOfLines={parseInt(values.length/7)+1} values={values} blocksSize={20} colors={colors}/>
+            </ScrollView>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
       <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']} />
     </View>
@@ -102,15 +130,37 @@ const getData = () => { // retrieves data from table
       (tx, results) => {
         var len = results.rows.length;
         for (let i = 0; i < len; i++) {
-          dates.push(results.rows.item(i).Date);
+          dates.push(results.rows.item(i).Date); 
           labels.push(results.rows.item(i).Label);
           images.push(results.rows.item(i).Image);
+          console.log(dates[i], results[i])
         }
       }
     )
   })
-
   return [dates, labels, images];
+}
+
+const getTotalData = () => { // retrieves data from table
+
+  try {
+
+  db.transaction((tx) => {
+    tx.executeSql(
+      "SELECT count(*)  FROM Logs ",
+      [],
+      (tx, results) => {
+       
+        console.log("inside "+results.rows.length);
+        setTotalCnt(results.rows.length)
+        console.log("inside2 "+results.rows.length);
+      }
+    )
+  })
+  // console.log("Outside: ", totalCount)
+} catch (error) {
+  console.error(error);
+}
 }
 
 const LogScreen = () => {
