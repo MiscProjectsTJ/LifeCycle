@@ -6,6 +6,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Dimensions, StyleSheet, Text, Button, TouchableOpacity, View, ScrollView, ImageBackground, PermissionsAndroid, ToastAndroid } from 'react-native';
 import { Image, TextInput } from 'react-native';
 import * as Clipboard from "expo-clipboard";
+import * as Permissions from 'expo-permissions';
+//import * as MediaLibrary from 'expo-media-library';
 
 // REACT NAVIGATION IMPORTS
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -77,42 +79,50 @@ const HomeScreen = () => {
   );
 }
 
+const Log = props => {
+
+}
+
+const setData = async (date, label, image) => { // adds new data to table 
+  await db.transaction(async (tx) => {
+    await tx.executeSql(
+      "INSERT INTO Logs (Date, Label, Image) VALUES (?, ?, ?)",
+      [date, label, image]
+    )
+  })
+}
+
+const getData = () => { // retrieves data from table
+  let dates = [], labels = [], images = [];
+
+  db.transaction((tx) => {
+    tx.executeSql(
+      "SELECT Date, Label, Image FROM Logs",
+      [],
+      (tx, results) => {
+        var len = results.rows.length;
+        for (let i = 0; i < len; i++) {
+          dates.push(results.rows.item(i).Date);
+          labels.push(results.rows.item(i).Label);
+          images.push(results.rows.item(i).Image);
+        }
+      }
+    )
+  })
+
+  return [dates, labels, images];
+}
+
 const LogScreen = () => {
   const [data, setD] = useState({});
 
-  const setData = async (date, label) => { // adds new data to table 
-    await db.transaction(async (tx) => {
-      await tx.executeSql(
-        "INSERT INTO Logs (Date, Label) VALUES (?, ?)",
-        [date, label]
-      )
-    })
-  }
-
-  const getData = () => { // retrieves data from table
-    db.transaction((tx) => {
-      tx.executeSql(
-        "SELECT Date, Label FROM Logs",
-        [],
-        (tx, results) => {
-          var len = results.rows.length;
-          if (len > 0) {
-            var date = results.rows.item(len - 1).Date;
-            var img = results.rows.item(len - 1).Image;
-            var label = results.rows.item(len - 1).Label
-            setD({ 'date': date + 1, 'label': label });
-          }
-        }
-      )
-    })
-  }
-
   return (
     <View>
-      <Text>Log Screen</Text>
-      <View style={styles.home_log} />
-      <Button title="click for sex" onPress={() => setData(data.date, 'FUNNY NUMBER')} />
-      <Button title="click for return" onPress={() => getData()} />
+      <View style={styles.home_log}>
+        <Text></Text>
+      </View>
+      {/*<Button title="click for sex" onPress={() => setData(data.date, 'FUNNY NUMBER')} />*/}
+      <Button title="click for return" onPress={() => {setD(getData())}} />
       <Text>here data: {JSON.stringify(data)}</Text>
       <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']} />
     </View>
@@ -309,15 +319,6 @@ function MapScreen({ navigation, route }) {
   );
 }
 
-function ClassifyScreen() {
-  return (
-    <View>
-      <Text>Classify</Text>
-      <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']} />
-    </View>
-  );
-}
-
 const Stack = createNativeStackNavigator();
 
 const NavBar = (props) => {
@@ -396,7 +397,7 @@ export default function App() {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS "
         + "Logs "
-        + "(Date INTEGER, Label STRING);"
+        + "(Date INTEGER, Label STRING, Photo BLOB);"
       )
     })
   }

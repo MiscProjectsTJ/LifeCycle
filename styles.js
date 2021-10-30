@@ -84,8 +84,10 @@ const styles = StyleSheet.create({
     },
     home_log: {
         width: 0.9 * width,
-        height: 0.43 * height,
-        marginTop: 0.1 * height,
+        height: 0.2 * height,
+        marginTop: 0.05 * width,
+        marginLeft: 0.05 * width,
+        marginRight: 0.05 * width,
         backgroundColor: '#8AC755',
         borderRadius: 10,
         borderWidth: 1,
