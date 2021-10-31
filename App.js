@@ -34,8 +34,7 @@ import styles from './styles';
 import ClassifyPane from './ClassifyPane.js';
 import Grid from 'react-native-easy-grid';
 // import NavBar from './components/NavBar';
-import SQLite from 'react-native-sqlite-storage';
-import { db, setData, getData } from './databse_functions';
+import { db, setData, getData } from './database_functions.js';
 
 MapboxGL.requestAndroidLocationPermissions()
 LocationServicesDialogBox.checkLocationServicesIsEnabled({
@@ -60,12 +59,10 @@ const labels = ["MAP", "LOG", "CLASSIFY"];
 
 const HomeScreen = (props) => {
 
-  setData('10-20-2021', 'plastic', turtle)
-  console.log(getData())
   const [totalCnt, setTotalCnt] = useState('');
   useEffect(() => {
-    setTotalCnt(getTotalData())
-    console.log("HOMESCREEN: ", totalCnt)
+    getData(setTotalCnt);
+    console.log("HOMESCREEN: ", totalCnt);
   }, []);
 
   const t = parseInt(10 / 3) // totalCnt/3
@@ -104,7 +101,7 @@ const Log = props => {
 
 }
 
-const getTotalData = () => { // retrieves data from table
+/*const getTotalData = () => { // retrieves data from table
 
   try {
 
@@ -124,7 +121,7 @@ const getTotalData = () => { // retrieves data from table
   } catch (error) {
     console.error(error);
   }
-}
+}*/
 
 const LogScreen = () => {
   const [data, setD] = useState({});
@@ -134,8 +131,8 @@ const LogScreen = () => {
       <View style={styles.home_log}>
         <Text></Text>
       </View>
-      {/*<Button title="click for sex" onPress={() => setData(data.date, 'FUNNY NUMBER')} />*/}
-      <Button title="click for return" onPress={() => { setD(getData()) }} />
+      {<Button title="click for sex" onPress={() => setData(new Date().getTime(), 'TEST LABEL', 'TEST IMAGE')} />}
+      <Button title="click for return" onPress={() => { getData(setD) }} />
       <Text>here data: {JSON.stringify(data)}</Text>
       <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']} />
     </View>
@@ -409,8 +406,8 @@ export default function App() {
     db.transaction((tx) => {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS "
-        + "Logs "
-        + "(Date INTEGER, Label STRING, Photo BLOB);"
+        + "Logs2 "
+        + "(Date INTEGER, Label STRING, Image STRING);"
       )
     })
   }
