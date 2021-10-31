@@ -11,6 +11,7 @@ const ClassifyPane = () => {
   const[text, setText] = useState(<Text></Text>);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const[camera, setCamera] = useState()
+  const[imgUri, setImgUri] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -36,36 +37,35 @@ const ClassifyPane = () => {
           onPress={async () => {
             "use strict";
             if(cameraRef){
-              let photo = await cameraRef.takePictureAsync({base64: true});
-              setData(new Date().getTime(), 'plastic', JSON.stringify(photo.base64));
+              let photo = await cameraRef.takePictureAsync({base64: true, quality: 0.05});
+              // setData(new Date().getTime(), 'plastic', JSON.stringify(photo.base64));
 
               setImg(photo);
-              setTimeout(function(){
-              setText(<Text style={{color:"white",fontSize:20, alignSelf:"center"}}>plastc</Text>);
-              }, 1000,);
-              // body = JSON.stringify({"val":btoa(photo.base64)})
+              // setTimeout(function(){
+              // setText(<Text style={{color:"white",fontSize:20, alignSelf:"center"}}>plastc</Text>);
+              // }, 1000,);
 
-              // return <Image source={img.uri}/>;
-              // console.log(JSON.stringify(img.base64));
-              // fetch("https://lifecycleapi-production.up.railway.app/add", {
-              //   "method": "POST",
-              //   "headers": {
-              //     Accept: "*/*",
-              //     "Content-Type": "application/json"
-              //   },
-              //   "body": body,
-              // })
-              // .then(response => response.json())
-              // .then(data => {
-              //   setImgUri(data.result);
-              //   console.log('Success:', data);
-              // })
-              // .catch((error) => {
-              //   console.error('Error:', error);
-              // });
+              console.log(JSON.stringify(photo.base64));
+              fetch("http://192.168.0.112:3000/add", {
+                "method": "POST",
+                "headers": {
+                  Accept: "*/*",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"val":photo.base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '')}),
+              })
+              .then(response => response.json())
+              .then(data => {
+                setImgUri(data.result);
+                console.log('Success:', data);
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
             }
           }}>
           <Text style={styles.buttonText}> capture </Text>
+          {/* <Image source={imgUri}/>; */}
         </TouchableOpacity>
         </View>        
         <ScrollView>
