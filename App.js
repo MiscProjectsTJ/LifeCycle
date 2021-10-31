@@ -68,36 +68,36 @@ const labels = ["MAP", "LOG", "CLASSIFY"];
 
 const HomeScreen = (props) => {
 
-  setData('10-20-2021', 'plastic',turtle)
+  setData('10-20-2021', 'plastic', turtle)
   const [totalCnt, setTotalCnt] = useState('');
   useEffect(() => {
     setTotalCnt(getTotalData())
     console.log("HOMESCREEN: ", totalCnt)
   }, []);
 
-  const t =  parseInt(10/3) // totalCnt/3
+  const t = parseInt(10 / 3) // totalCnt/3
   console.log("Turtles: ", t)
   const con = []
   for (let i = 0; i < t; i++) {
-     con.push(<Image key={i} source={turtle} />);
+    con.push(<Image key={i} source={turtle} />);
   }
   const values = [0, 4, 6, 1, 7, 3, 0, 8, 6, 2, 0, 10, 20, 12, 0, 0, 10, 0, 17, 8, 0, 6, 0, 6, 10, 23, 0, 6, 10, 23] // getData()
-  const colors = 	['#504f55', '#655488', '#9F7DE1', '#FFFFFF']
+  const colors = ['#504f55', '#655488', '#9F7DE1', '#FFFFFF']
   // const blocksStyles
   return (
     <View>
-      <View style ={styles.home_container}>
-        <ScrollView>        
+      <View style={styles.home_container}>
+        <ScrollView>
           <View style={styles.home_log}>
             <Text style={styles.home_text}> You have saved {JSON.stringify(totalCnt)} turtles </Text>
-            <View style= {{ flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
+            <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
               {con}
             </View>
           </View>
           <Text style={styles.home_text}> Heatmap for last {values.length} days </Text>
           <TouchableOpacity>
-            <ScrollView style={styles.heatmap}> 
-              <HeatMap numberOfLines={parseInt(values.length/7)+1} values={values} blocksSize={20} colors={colors}/>
+            <ScrollView style={styles.heatmap}>
+              <HeatMap numberOfLines={parseInt(values.length / 7) + 1} values={values} blocksSize={20} colors={colors} />
             </ScrollView>
           </TouchableOpacity>
         </ScrollView>
@@ -130,7 +130,7 @@ const getData = () => { // retrieves data from table
       (tx, results) => {
         var len = results.rows.length;
         for (let i = 0; i < len; i++) {
-          dates.push(results.rows.item(i).Date); 
+          dates.push(results.rows.item(i).Date);
           labels.push(results.rows.item(i).Label);
           images.push(results.rows.item(i).Image);
           console.log(dates[i], results[i])
@@ -145,22 +145,22 @@ const getTotalData = () => { // retrieves data from table
 
   try {
 
-  db.transaction((tx) => {
-    tx.executeSql(
-      "SELECT count(*)  FROM Logs ",
-      [],
-      (tx, results) => {
-       
-        console.log("inside "+results.rows.length);
-        setTotalCnt(results.rows.length)
-        console.log("inside2 "+results.rows.length);
-      }
-    )
-  })
-  // console.log("Outside: ", totalCount)
-} catch (error) {
-  console.error(error);
-}
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT count(*)  FROM Logs ",
+        [],
+        (tx, results) => {
+
+          console.log("inside " + results.rows.length);
+          setTotalCnt(results.rows.length)
+          console.log("inside2 " + results.rows.length);
+        }
+      )
+    })
+    // console.log("Outside: ", totalCount)
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 const LogScreen = () => {
@@ -172,7 +172,7 @@ const LogScreen = () => {
         <Text></Text>
       </View>
       {/*<Button title="click for sex" onPress={() => setData(data.date, 'FUNNY NUMBER')} />*/}
-      <Button title="click for return" onPress={() => {setD(getData())}} />
+      <Button title="click for return" onPress={() => { setD(getData()) }} />
       <Text>here data: {JSON.stringify(data)}</Text>
       <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']} />
     </View>
@@ -221,9 +221,9 @@ function MapScreen({ navigation, route }) {
       <MapboxGL.MapView style={({ width: width }, { height: 0.4 * height })}>
         <MapboxGL.UserLocation visible={true} />
         <MapboxGL.Camera
-            zoomLevel={-1}
-            scrollEnabled={false}
-            logoEnabled={true}
+          zoomLevel={-1}
+          scrollEnabled={false}
+          logoEnabled={true}
         />
       </MapboxGL.MapView>
       <Image
@@ -259,17 +259,17 @@ function MapScreen({ navigation, route }) {
       var results = [];
       var mapResults = [];
 
-      results.push(<Text key="directions" style={{ fontSize:20,color:"red",textAlign:"center"}}>Press on one of the addresses below to copy to clipboard.</Text>);
+      results.push(<Text key="directions" style={{ fontSize: 20, color: "red", textAlign: "center" }}>Press on one of the addresses below to copy to clipboard.</Text>);
       let tempKeys = mapInfo[route.params.index]["Keywords"];
       for (let query in tempKeys) {
         fetch(
           "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
-            tempKeys[query] +
-            ".json?country=US&proximity=" +
-            long +
-            "," +
-            lat +
-            "&limit=3&access_token=pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A"
+          tempKeys[query] +
+          ".json?country=US&proximity=" +
+          long +
+          "," +
+          lat +
+          "&limit=3&access_token=pk.eyJ1Ijoicm9taW92aWN0b3IxMjMiLCJhIjoiY2tzOXJ4YndkMHZpdjJzbno5emZic2hzNCJ9.0HQbmymuNzk0S4Ofsi2y-A"
         )
           .then((response) => response.json())
           .then((response) => {
@@ -302,7 +302,7 @@ function MapScreen({ navigation, route }) {
                           styles.layoutMap,
                         ]}
                       >
-                        <Text style={{ fontSize: 15, textAlign:"center" }}>
+                        <Text style={{ fontSize: 15, textAlign: "center" }}>
                           {"Point " + x} {listAddress[x]}
                         </Text>
                       </View>
@@ -351,19 +351,19 @@ function MapScreen({ navigation, route }) {
             console.log(err);
           });
       }
-      
+
     }, 5000);
   }, [update]);
 
   return (
-    <View style={{justifyContent:"center", textAlign: 'center', backgroundColor:"#36425C"}}>
+    <View style={{ justifyContent: "center", textAlign: 'center', backgroundColor: "#36425C" }}>
       {mapText}
       <View
         style={
           ({ backgroundColor: "#36425C" }, { height: height - 0.4 * height })
         }
       >
-        <ScrollView style={{ flex: 1}}>{text}</ScrollView>
+        <ScrollView style={{ flex: 1 }}>{text}</ScrollView>
       </View>
     </View>
   );

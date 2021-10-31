@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
     },
     rectangle: {
         width: width,
-        height: 0.1 * height,
-        marginTop: 0.822 * height,
+        height: 0.12 * height,
+        marginTop: 0.76 * height,
         position: 'absolute',
         backgroundColor: "#8AC755",
         flexDirection: "row",
