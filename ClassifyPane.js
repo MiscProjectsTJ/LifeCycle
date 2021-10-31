@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet, Text, View, TouchableOpacity, Image, AppRegistry } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, AppRegistry } from 'react-native';
 import { Camera} from 'expo-camera';
 import SQLite from 'react-native-sqlite-storage';
-import { setData } from './database_functions';
+import { setData, getData } from './database_functions';
 
 const ClassifyPane = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const[cameraRef, setCameraRef] = useState(null);
   const[img, setImg] = useState(null);
-  const[imgUri, setImgUri] = useState(null);
+  const[text, setText] = useState(<Text></Text>);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const[camera, setCamera] = useState()
 
   useEffect(() => {
     (async () => {
@@ -27,41 +28,49 @@ const ClassifyPane = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>classify</Text>
+      {camera}
       <Camera style={styles.camera} ref={ref => {setCameraRef(ref);}}/>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={async () => {
-              "use strict";
-              if(cameraRef){
-                let photo = await cameraRef.takePictureAsync({base64: true});
-                setData(new Date().getTime(), 'plastic', JSON.stringify(photo.base64));
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => {
+            "use strict";
+            if(cameraRef){
+              let photo = await cameraRef.takePictureAsync({base64: true});
+              setData(new Date().getTime(), 'plastic', JSON.stringify(photo.base64));
 
-                setImg(photo);
-                body = JSON.stringify({"val":btoa(photo.base64)})
-                // return <Image source={img.uri}/>;
-                // console.log(JSON.stringify(img.base64));
-                fetch("https://lifecycleapi-production.up.railway.app/add", {
-                  "method": "POST",
-                  "headers": {
-                    Accept: "*/*",
-                    "Content-Type": "application/json"
-                  },
-                  "body": body,
-                })
-                .then(response => response.json())
-                .then(data => {
-                  setImgUri(data.result);
-                  console.log('Success:', data);
-                })
-                .catch((error) => {
-                  console.error('Error:', error);
-                });
-              }
-            }}>
-            <Text style={styles.buttonText}> capture </Text>
-          </TouchableOpacity>
-        </View>
+              setImg(photo);
+              setTimeout(function(){
+              setText(<Text style={{color:"white",fontSize:20, alignSelf:"center"}}>plastc</Text>);
+              }, 1000,);
+              // body = JSON.stringify({"val":btoa(photo.base64)})
+
+              // return <Image source={img.uri}/>;
+              // console.log(JSON.stringify(img.base64));
+              // fetch("https://lifecycleapi-production.up.railway.app/add", {
+              //   "method": "POST",
+              //   "headers": {
+              //     Accept: "*/*",
+              //     "Content-Type": "application/json"
+              //   },
+              //   "body": body,
+              // })
+              // .then(response => response.json())
+              // .then(data => {
+              //   setImgUri(data.result);
+              //   console.log('Success:', data);
+              // })
+              // .catch((error) => {
+              //   console.error('Error:', error);
+              // });
+            }
+          }}>
+          <Text style={styles.buttonText}> capture </Text>
+        </TouchableOpacity>
+        </View>        
+        <ScrollView>
+          {text}
+        </ScrollView>
     </View>
   );
 }
@@ -87,7 +96,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     button: {
-      width: 162,
+      width: 300,
       height: 41,
       borderWidth: 1,
       borderColor: '#BED751',

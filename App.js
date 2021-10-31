@@ -59,9 +59,9 @@ const labels = ["MAP", "LOG", "CLASSIFY"];
 
 const HomeScreen = (props) => {
 
-  const [totalCnt, setTotalCnt] = useState('');
+  const [totalCnt, setTotalCnt] = useState(3);
   useEffect(() => {
-    getData(setTotalCnt);
+    // getData(setTotalCnt);
     console.log("HOMESCREEN: ", totalCnt);
   }, []);
 
@@ -124,16 +124,43 @@ const Log = props => {
 }*/
 
 const LogScreen = () => {
-  const [data, setD] = useState({});
+  const [data, setD] = useState("");
+  var datas = []
+
+  // useEffect(()=> {
+  //   getData(setD);
+  //   console.log("LOG: ", data);
+  // }, []);
+
+  // const resolve_func = (data2) =>{
+  //   console.log(data2)
+    
+  // }
+  // getData(resolve_func)
+  
 
   return (
-    <View>
-      <View style={styles.home_log}>
-        <Text></Text>
-      </View>
-      {<Button title="click for sex" onPress={() => setData(new Date().getTime(), 'TEST LABEL', 'TEST IMAGE')} />}
+    <View style={styles.home_container}>
+      <ScrollView>
+        <View style={styles.home_log}>
+          <Text style={styles.logText}>Date: 10/31/2021</Text>
+          <Text style={styles.logText}>Classifications: Cardboard</Text>
+          <Image style={styles.logImg} source={require("./icons/cardboard.png")}></Image>
+        </View>
+        <View style={styles.home_log}>
+          <Text style={styles.logText}>Date: 10/31/2021</Text>
+          <Text style={styles.logText}>Classifications: Plastic</Text>
+          <Image style={styles.logImg} source={require("./icons/index.jpeg")}></Image>
+        </View>
+        <View style={styles.home_log}>
+          <Text style={styles.logText}>Date: 10/30/2021</Text>
+          <Text style={styles.logText}>Classifications: Metal</Text>
+          <Image style={styles.logImg} source={require("./icons/metal.png")}></Image>
+        </View>
+      </ScrollView>
+      {/* {<Button title="click for sex" onPress={() => setData(new Date().getTime(), 'TEST LABEL', 'TEST IMAGE')} />}
       <Button title="click for return" onPress={() => { getData(setD) }} />
-      <Text>here data: {JSON.stringify(data)}</Text>
+      <Text>here data: {JSON.stringify(data)}</Text> */}
       <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']} />
     </View>
   )

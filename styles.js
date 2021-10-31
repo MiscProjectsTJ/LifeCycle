@@ -112,6 +112,16 @@ const styles = StyleSheet.create({
         marginLeft: 0.05*width, 
         marginRight: 0.05*width
     },
+    logText: {
+        color: "#ffffff",
+        fontSize: 20,
+        marginLeft:.02*width
+    },
+    logImg: {
+        alignSelf: "center",
+        width: 0.35*width,
+        height: 0.3*height
+    }
 });
 
 export default styles;
