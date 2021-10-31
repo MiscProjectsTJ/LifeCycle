@@ -35,6 +35,7 @@ import ClassifyPane from './ClassifyPane.js';
 import Grid from 'react-native-easy-grid';
 // import NavBar from './components/NavBar';
 import SQLite from 'react-native-sqlite-storage';
+import { setData, getData } from './databse_functions';
 
 const db = SQLite.openDatabase(
   {
@@ -109,36 +110,6 @@ const HomeScreen = (props) => {
 
 const Log = props => {
 
-}
-
-const setData = async (date, label, image) => { // adds new data to table 
-  await db.transaction(async (tx) => {
-    await tx.executeSql(
-      "INSERT INTO Logs (Date, Label, Image) VALUES (?, ?, ?)",
-      [date, label, image]
-    )
-  })
-}
-
-const getData = () => { // retrieves data from table
-  let dates = [], labels = [], images = [];
-
-  db.transaction((tx) => {
-    tx.executeSql(
-      "SELECT Date, Label, Image FROM Logs",
-      [],
-      (tx, results) => {
-        var len = results.rows.length;
-        for (let i = 0; i < len; i++) {
-          dates.push(results.rows.item(i).Date); 
-          labels.push(results.rows.item(i).Label);
-          images.push(results.rows.item(i).Image);
-          console.log(dates[i], results[i])
-        }
-      }
-    )
-  })
-  return [dates, labels, images];
 }
 
 const getTotalData = () => { // retrieves data from table

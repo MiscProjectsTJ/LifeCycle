@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Dimensions, StyleSheet, Text, View, TouchableOpacity, Image, AppRegistry } from 'react-native';
 import { Camera} from 'expo-camera';
 import SQLite from 'react-native-sqlite-storage';
+import { setData } from './databse_functions';
 
 const ClassifyPane = () => {
   const [hasPermission, setHasPermission] = useState(null);
