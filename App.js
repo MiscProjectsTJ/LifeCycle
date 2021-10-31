@@ -79,7 +79,7 @@ const HomeScreen = (props) => {
   console.log("Turtles: ", t)
   const con = []
   for (let i = 0; i < t; i++) {
-     con.push(<Image source={turtle} />);
+     con.push(<Image key={i} source={turtle} />);
   }
   const values = [0, 4, 6, 1, 7, 3, 0, 8, 6, 2, 0, 10, 20, 12, 0, 0, 10, 0, 17, 8, 0, 6, 0, 6, 10, 23, 0, 6, 10, 23] // getData()
   const colors = 	['#504f55', '#655488', '#9F7DE1', '#FFFFFF']

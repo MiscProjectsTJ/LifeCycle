@@ -28,6 +28,7 @@
     "react-native-android-location-services-dialog-box": "^2.8.2",
     "react-native-camera": "4.2.1",
     "react-native-drop-shadow": "^0.0.2",
+    "react-native-easy-grid": "^0.2.2",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-heatmap-chart": "^1.0.2",
