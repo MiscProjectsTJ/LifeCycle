@@ -1,3 +1,14 @@
+import SQLite from "react-native-sqlite-storage";
+
+const db = SQLite.openDatabase(
+  {
+    name: 'TestDB',
+    location: 'default'
+  },
+  () => { },
+  error => { console.log(error) }
+);
+
 const setData = async (date, label, image) => { // adds new data to table 
   await db.transaction(async (tx) => {
     await tx.executeSql(

@@ -70,6 +70,7 @@ const labels = ["MAP", "LOG", "CLASSIFY"];
 const HomeScreen = (props) => {
 
   setData('10-20-2021', 'plastic', turtle)
+  console.log(getData())
   const [totalCnt, setTotalCnt] = useState('');
   useEffect(() => {
     setTotalCnt(getTotalData())
