@@ -35,16 +35,7 @@ import ClassifyPane from './ClassifyPane.js';
 import Grid from 'react-native-easy-grid';
 // import NavBar from './components/NavBar';
 import SQLite from 'react-native-sqlite-storage';
-import { setData, getData } from './databse_functions';
-
-const db = SQLite.openDatabase(
-  {
-    name: 'TestDB',
-    location: 'default'
-  },
-  () => { },
-  error => { console.log(error) }
-);
+import { db, setData, getData } from './databse_functions';
 
 MapboxGL.requestAndroidLocationPermissions()
 LocationServicesDialogBox.checkLocationServicesIsEnabled({

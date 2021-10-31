@@ -1,12 +1,13 @@
 import SQLite from "react-native-sqlite-storage";
 
+// create exportable wrapper class around db
 const db = SQLite.openDatabase(
   {
     name: 'TestDB',
     location: 'default'
   },
-  () => { },
-  error => { console.log(error) }
+  () => {},
+  error => {console.log(error)}
 );
 
 const setData = async (date, label, image) => { // adds new data to table 
@@ -39,4 +40,4 @@ const getData = () => { // retrieves data from table
   return [dates, labels, images];
 }
 
-export {setData, getData}
+export {db, setData, getData}
