@@ -144,17 +144,22 @@ const LogScreen = () => {
       <ScrollView>
         <View style={styles.home_log}>
           <Text style={styles.logText}>Date: 10/31/2021</Text>
-          <Text style={styles.logText}>Classifications: Cardboard</Text>
+          <Text style={styles.logText2}>Classifications: Cardboard-85.42313193206787%</Text>
           <Image style={styles.logImg} source={require("./icons/cardboard.png")}></Image>
         </View>
         <View style={styles.home_log}>
           <Text style={styles.logText}>Date: 10/31/2021</Text>
-          <Text style={styles.logText}>Classifications: Plastic</Text>
+          <Text style={styles.logText2}>Classifications: Plastic-86.454645193206787%</Text>
           <Image style={styles.logImg} source={require("./icons/index.jpeg")}></Image>
         </View>
         <View style={styles.home_log}>
           <Text style={styles.logText}>Date: 10/30/2021</Text>
-          <Text style={styles.logText}>Classifications: Metal</Text>
+          <Text style={styles.logText2}>Classifications: Metal-82.53456613193206787%</Text>
+          <Image style={styles.logImg} source={require("./icons/metal.png")}></Image>
+        </View>
+        <View style={styles.home_log}>
+          <Text style={styles.logText}>Date: 10/30/2021</Text>
+          <Text style={styles.logText2}>Classifications: Metal-81.53456613193206787%</Text>
           <Image style={styles.logImg} source={require("./icons/metal.png")}></Image>
         </View>
       </ScrollView>

@@ -46,7 +46,7 @@ const ClassifyPane = () => {
               // }, 1000,);
 
               console.log(JSON.stringify(photo.base64));
-              fetch("http://192.168.0.112:3000/add", {
+              fetch("https://lifecyclecac.herokuapp.com/add", {
                 "method": "POST",
                 "headers": {
                   Accept: "*/*",
@@ -57,7 +57,10 @@ const ClassifyPane = () => {
               .then(response => response.json())
               .then(data => {
                 setImgUri(data.result);
-                console.log('Success:', data);
+                console.log(data["result"]);
+                var temp = JSON.parse(data["result"])
+                console.log(temp[0].class)
+                setText(<Text style={{color:"white",fontSize:20, alignSelf:"center"}}>{temp[0].class}: {temp[0].score*100}%</Text>)
               })
               .catch((error) => {
                 console.error('Error:', error);
