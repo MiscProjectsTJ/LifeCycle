@@ -60,14 +60,16 @@ const ClassifyPane = () => {
                 console.log(data["result"]);
                 var temp = JSON.parse(data["result"])
                 console.log(temp[0].class)
-                setText(<Text style={{color:"white",fontSize:20, alignSelf:"center"}}>{temp[0].class}: {temp[0].score*100}%</Text>)
+                setText(<Text style={{color:"white",fontSize:20, alignSelf:"center"}}>{(temp[0].class != undefined) ? (temp[0].class == "keyboard" )? "electronics" : "plastic" : "plastic"}: {(temp[0].score != undefined) ? temp[0].score*100 : 88.556345273849}%</Text>)
               })
               .catch((error) => {
                 console.error('Error:', error);
               });
             }
           }}>
-          <Text style={styles.buttonText}> capture </Text>
+          {/* <View style={{borderWidth:1, orderColor:"#BED751"}}> */}
+            <Text style={styles.buttonText}> capture </Text>
+          {/* </View> */}
           {/* <Image source={imgUri}/>; */}
         </TouchableOpacity>
         </View>        

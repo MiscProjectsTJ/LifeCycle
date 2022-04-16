@@ -1,13 +1,13 @@
 export const mapInfo = [
     {
-        "Type": "Plastic",
+        "Type": "plastic",
         "Keywords": ["grocery", "recycling"],
         "Image": require("./icons/plastic.png")
     },
         {
-        "Type": "Paper",
-        "Keywords": ["recycling"],
-        "Image": require("./icons/paper.png")
+        "Type": "electronics",
+        "Keywords": ["electronics","tech","recycling"],
+        "Image": require("./icons/electronic.png")
     },
         {
         "Type": "Cardboard",
@@ -15,9 +15,9 @@ export const mapInfo = [
         "Image": require("./icons/cardboard.png")
     },
         {
-        "Type": "Metal",
-        "Keywords": ["metal", "recycling"],
-        "Image": require("./icons/metal.png")
+        "Type": "paper",
+        "Keywords": ["recycling"],
+        "Image": require("./icons/paper.png")
     },
         {
         "Type": "Glass",
