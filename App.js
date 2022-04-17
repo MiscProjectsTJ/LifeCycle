@@ -161,6 +161,7 @@ const LogScreen = () => {
           <Text style={styles.logText}>Classifications: Cardboard</Text>
           <Image style={styles.logImg} source={require("./icons/cardboard.png")}></Image>
           <Text style={styles.logText}>Cool fact: Cardboard is used to package 80% of the products in the US</Text>
+
         </View>
       </ScrollView>
       <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']} />

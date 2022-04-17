@@ -1,5 +1,6 @@
 export const mapInfo = [
     {
+<<<<<<< HEAD
         "Type": "Metal",
         "Keywords": ["metal", "recycling"],
         "Image": require("./icons/metal.png")
@@ -11,13 +12,16 @@ export const mapInfo = [
     },
     {
         "Type": "Plastic",
+=======
+        "Type": "plastic",
+>>>>>>> 0c1064a015ca02ce30f6f56e8b568f0330da1a4c
         "Keywords": ["grocery", "recycling"],
         "Image": require("./icons/plastic.png")
     },
         {
-        "Type": "Paper",
-        "Keywords": ["recycling"],
-        "Image": require("./icons/paper.png")
+        "Type": "electronics",
+        "Keywords": ["electronics","tech","recycling"],
+        "Image": require("./icons/electronic.png")
     },
         {
         "Type": "Cardboard",
@@ -25,6 +29,19 @@ export const mapInfo = [
         "Image": require("./icons/cardboard.png")
     },
         {
+<<<<<<< HEAD
+=======
+        "Type": "paper",
+        "Keywords": ["recycling"],
+        "Image": require("./icons/paper.png")
+    },
+        {
+        "Type": "Glass",
+        "Keywords": ["recycling"],
+        "Image": require("./icons/glass.png")
+    },
+        {
+>>>>>>> 0c1064a015ca02ce30f6f56e8b568f0330da1a4c
         "Type": "Tires",
         "Keywords": ["tire", "recycling"],
         "Image": require("./icons/tires.png")

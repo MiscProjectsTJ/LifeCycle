@@ -22,7 +22,12 @@ const styles = StyleSheet.create({
     },
     /*rectangle: {
         width: width,
+<<<<<<< HEAD
         height: 150,
+=======
+        height: 0.12 * height,
+        marginTop: 0.783 * height,
+>>>>>>> 0c1064a015ca02ce30f6f56e8b568f0330da1a4c
         position: 'absolute',
         bottom: 0,
         backgroundColor: "#F2CC8F",
@@ -130,10 +135,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginLeft:.02*width
     },
+    logText2: {
+        color: "#ffffff",
+        fontSize: 18,
+        marginLeft:.02*width
+    },
     logImg: {
         alignSelf: "center",
         width: 0.35*width,
-        height: 0.3*height
+        height: 0.28*height
     }
 });
 
