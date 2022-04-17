@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       width:"100%",
-      backgroundColor: '#36425C',
+      backgroundColor: '#3D595B',
       alignSelf: 'center',
       overflow: 'hidden',
     },
@@ -99,13 +99,13 @@ const styles = StyleSheet.create({
       width: 300,
       height: 41,
       borderWidth: 1,
-      borderColor: '#BED751',
+      borderColor: '#E07A5F',
       borderRadius: 10,
       alignItems: 'center',
     },
     text: {
       fontSize: 36,
-      color: '#BED751',
+      color: '#E07A5F',
       alignSelf:'center',
     },
     buttonText: {

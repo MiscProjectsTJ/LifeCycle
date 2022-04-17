@@ -1,5 +1,15 @@
 export const mapInfo = [
     {
+        "Type": "Metal",
+        "Keywords": ["metal", "recycling"],
+        "Image": require("./icons/metal.png")
+    },
+        {
+        "Type": "Glass",
+        "Keywords": ["recycling"],
+        "Image": require("./icons/glass.png")
+    },
+    {
         "Type": "Plastic",
         "Keywords": ["grocery", "recycling"],
         "Image": require("./icons/plastic.png")
@@ -13,16 +23,6 @@ export const mapInfo = [
         "Type": "Cardboard",
         "Keywords": ["recycling"],
         "Image": require("./icons/cardboard.png")
-    },
-        {
-        "Type": "Metal",
-        "Keywords": ["metal", "recycling"],
-        "Image": require("./icons/metal.png")
-    },
-        {
-        "Type": "Glass",
-        "Keywords": ["recycling"],
-        "Image": require("./icons/glass.png")
     },
         {
         "Type": "Tires",

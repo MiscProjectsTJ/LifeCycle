@@ -19,7 +19,7 @@ import log from './icons/log.png';
 import recycle from './icons/recycle.png';
 import arrow from './icons/7arrow.png';
 import button from './icons/Ellipse29.png';
-import turtle from './icons/turtle.png';
+import penguin from './icons/penguin.png';
 import nametag from './icons/nametag.png';
 import loadGif from './gifs/R.gif'
 import 'react-native-gesture-handler';
@@ -33,7 +33,6 @@ import LocationServicesDialogBox from "react-native-android-location-services-di
 import styles from './styles';
 import ClassifyPane from './ClassifyPane.js';
 import Grid from 'react-native-easy-grid';
-// import NavBar from './components/NavBar';
 import { db, setData, getData } from './database_functions.js';
 
 MapboxGL.requestAndroidLocationPermissions()
@@ -61,7 +60,7 @@ const HomeScreen = (props) => {
 
   const [totalCnt, setTotalCnt] = useState(3);
   useEffect(() => {
-    // getData(setTotalCnt);
+    getData(setTotalCnt);
     console.log("HOMESCREEN: ", totalCnt);
   }, []);
 
@@ -69,7 +68,7 @@ const HomeScreen = (props) => {
   console.log("Turtles: ", t)
   const con = []
   for (let i = 0; i < t; i++) {
-    con.push(<Image key={i} source={turtle} />);
+    con.push(<Image key={i} source={penguin} />);
   }
   const values = [0, 4, 6, 1, 7, 3, 0, 8, 6, 2, 0, 10, 20, 12, 0, 0, 10, 0, 17, 8, 0, 6, 0, 6, 10, 23, 0, 6, 10, 23] // getData()
   const colors = ['#504f55', '#655488', '#9F7DE1', '#FFFFFF']
@@ -79,7 +78,7 @@ const HomeScreen = (props) => {
       <View style={styles.home_container}>
         <ScrollView>
           <View style={styles.home_log}>
-            <Text style={styles.home_text}> You have saved {JSON.stringify(totalCnt)} turtles </Text>
+            <Text style={styles.home_text}> You have saved {JSON.stringify(totalCnt.length)} penguins </Text>
             <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
               {con}
             </View>
@@ -101,7 +100,7 @@ const Log = props => {
 
 }
 
-/*const getTotalData = () => { // retrieves data from table
+const getTotalData = () => { // retrieves data from table
 
   try {
 
@@ -117,50 +116,53 @@ const Log = props => {
         }
       )
     })
-    // console.log("Outside: ", totalCount)
+    console.log("Outside: ", totalCount)
   } catch (error) {
     console.error(error);
   }
-}*/
+}
 
 const LogScreen = () => {
   const [data, setD] = useState("");
   var datas = []
 
-  // useEffect(()=> {
-  //   getData(setD);
-  //   console.log("LOG: ", data);
-  // }, []);
+  useEffect(()=> {
+    getData(setD);
+    console.log("LOG: ", data);
+  }, []);
 
-  // const resolve_func = (data2) =>{
-  //   console.log(data2)
+  const resolve_func = (data2) =>{
+    console.log(data2)
     
-  // }
-  // getData(resolve_func)
+  }
+  getData(resolve_func)
   
 
   return (
     <View style={styles.home_container}>
+      {/*<Button title="click for sex" onPress={() => setData(new Date().getTime(), 'TEST LABEL', 'TEST IMAGE')} />
+      <Button title="click for return" onPress={() => { getData(setD) }} />
+  <Text>here data: {JSON.stringify(data)}</Text>*/}
       <ScrollView>
-        <View style={styles.home_log}>
-          <Text style={styles.logText}>Date: 10/31/2021</Text>
-          <Text style={styles.logText}>Classifications: Cardboard</Text>
-          <Image style={styles.logImg} source={require("./icons/cardboard.png")}></Image>
-        </View>
-        <View style={styles.home_log}>
-          <Text style={styles.logText}>Date: 10/31/2021</Text>
-          <Text style={styles.logText}>Classifications: Plastic</Text>
-          <Image style={styles.logImg} source={require("./icons/index.jpeg")}></Image>
-        </View>
-        <View style={styles.home_log}>
-          <Text style={styles.logText}>Date: 10/30/2021</Text>
+      <View style={styles.home_log}>
+          <Text style={styles.logText}>Date: 04/16/2022</Text>
           <Text style={styles.logText}>Classifications: Metal</Text>
           <Image style={styles.logImg} source={require("./icons/metal.png")}></Image>
+          <Text style={styles.logText}>Cool fact: Metals make up 75% of the periodic table</Text>
+        </View>
+        <View style={styles.home_log}>
+          <Text style={styles.logText}>Date: 04/16/2022</Text>
+          <Text style={styles.logText}>Classifications: Plastic</Text>
+          <Image style={styles.logImg} source={require("./icons/index.jpeg")}></Image>
+          <Text style={styles.logText}>Cool fact: Plastics are made of fossil fuels</Text>
+        </View>
+        <View style={styles.home_log}>
+          <Text style={styles.logText}>Date: 04/16/2022</Text>
+          <Text style={styles.logText}>Classifications: Cardboard</Text>
+          <Image style={styles.logImg} source={require("./icons/cardboard.png")}></Image>
+          <Text style={styles.logText}>Cool fact: Cardboard is used to package 80% of the products in the US</Text>
         </View>
       </ScrollView>
-      {/* {<Button title="click for sex" onPress={() => setData(new Date().getTime(), 'TEST LABEL', 'TEST IMAGE')} />}
-      <Button title="click for return" onPress={() => { getData(setD) }} />
-      <Text>here data: {JSON.stringify(data)}</Text> */}
       <NavBar images={[map, log, recycle]} labels={['MAP', 'LOG', 'CLASSIFY']} />
     </View>
   )
@@ -187,7 +189,7 @@ function MapScreenSelection() {
     );
   }
   return (
-    <View style={{ backgroundColor: "#36425C" }}>
+    <View style={{ backgroundColor: "#3D595B" }}>
       <ScrollView>{mapOptions}</ScrollView>
 
       <NavBar
@@ -343,11 +345,11 @@ function MapScreen({ navigation, route }) {
   }, [update]);
 
   return (
-    <View style={{ justifyContent: "center", textAlign: 'center', backgroundColor: "#36425C" }}>
+    <View style={{ justifyContent: "center", textAlign: 'center', backgroundColor: "#3D595B" }}>
       {mapText}
       <View
         style={
-          ({ backgroundColor: "#36425C" }, { height: height - 0.4 * height })
+          ({ backgroundColor: "#3D505B" }, { height: height - 0.4 * height })
         }
       >
         <ScrollView style={{ flex: 1 }}>{text}</ScrollView>
@@ -445,9 +447,9 @@ export default function App() {
         initialRouteName="HOME"
         screenOptions={{
           headerStyle: {
-            backgroundColor: "#36425C",
+            backgroundColor: "#3D505B",
           },
-          headerTintColor: "#BED751",
+          headerTintColor: "#F2CC8F",
           headerTitleStyle: {
             fontWeight: "bold",
           },

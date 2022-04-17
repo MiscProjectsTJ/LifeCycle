@@ -1,21 +1,34 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import { Row } from 'react-native-easy-grid';
 
 const { height, width } = Dimensions.get("window");
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#36425C',
+        backgroundColor: '#3D595B',
         alignItems: 'center',
         justifyContent: 'center',
     },
+    // position navbar at the bottom of the screen
     rectangle: {
-        width: width,
-        height: 0.12 * height,
-        marginTop: 0.76 * height,
         position: 'absolute',
-        backgroundColor: "#8AC755",
+        bottom: height * 0.1 - 20,
+        left: 0,
+        right: 0,
+        height: height * 0.1,
+        backgroundColor: '#F2CC8F',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+    },
+    /*rectangle: {
+        width: width,
+        height: 150,
+        position: 'absolute',
+        bottom: 0,
+        backgroundColor: "#F2CC8F",
         flexDirection: "row",
         justifyContent: "space-evenly"
-    },
+    },*/
     layoutMap: {
         flexDirection:'row',
         justifyContent:'space-around',
@@ -26,7 +39,7 @@ const styles = StyleSheet.create({
         height: 0.15 * height,
         borderRadius: 15,
         marginTop: 0.04 * height,
-        backgroundColor: '#8AC755',
+        backgroundColor: '#81B29A',
         marginLeft: 0.5 * 0.1 * width
     },
     imageMap: {
@@ -80,29 +93,29 @@ const styles = StyleSheet.create({
         position: 'relative',
         textAlign: "center",
         justifyContent: "center",
-        color: "#19C5E0"
+        color: "#E07A5F",
     },
     home_log: {
         width: 0.9 * width,
-        height: 0.4 * height,
+        minHeight: 0.4 * height,
         marginTop: 0.05 * width,
         marginLeft: 0.05 * width,
         marginRight: 0.05 * width,
-        backgroundColor: '#8AC755',
+        backgroundColor: '#81B29A',
         borderRadius: 10,
         borderWidth: 1,
         // borderColor: '#fff',
     },
     home_text: {
         fontSize: 20,
-        color: '#FFFFFF',
+        color: '#F4F1DE',
         alignSelf:'center',
         marginTop: 5,
         marginBottom: 5,
       },
     home_container: {
         height: height,
-        backgroundColor: '#36425C',
+        backgroundColor: '#3D595B',
         alignItems: 'center',
         color: '#FFFFFF'
       },
